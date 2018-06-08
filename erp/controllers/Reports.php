@@ -16511,15 +16511,10 @@ class Reports extends MY_Controller
 					'name'  => 'Verdana'
 				)
 			);
-			$bold = array(
-				'font' => array(
-					'bold' => true
-				)
-			);
 			
 			$this->load->library('excel');
 			$this->excel->setActiveSheetIndex(0);
-			$this->excel->getActiveSheet()->getStyle('A1:E1')->applyFromArray($styleArray);
+            $this->excel->getActiveSheet()->getStyle('A1:H1')->applyFromArray($styleArray);
 			$this->excel->getActiveSheet()->setTitle(lang('Cash Book Statement'));
 			$this->excel->getActiveSheet()->SetCellValue('A1', lang('Batch'));
 			$this->excel->getActiveSheet()->SetCellValue('B1', lang('Reference'));
@@ -16529,9 +16524,7 @@ class Reports extends MY_Controller
 			$this->excel->getActiveSheet()->SetCellValue('F1', lang('Type'));
 			$this->excel->getActiveSheet()->SetCellValue('G1', lang('Debit_Amount'));
 			$this->excel->getActiveSheet()->SetCellValue('H1', lang('Credit_Amount'));
-			
-			$this->excel->getActiveSheet()->getStyle('E2:F2')->applyFromArray($bold);
-			$this->excel->getActiveSheet()->getStyle('G2:H2')->applyFromArray($bold);
+            $this->excel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
 			if ($this->input->post('start_date') || $this->input->post('end_date') || (!$this->input->post('end_date') && !$this->input->post('end_date'))) {
 					
@@ -16542,7 +16535,7 @@ class Reports extends MY_Controller
 				}
 				
 				$acc = $accounntCode->get()->result();
-				
+                $row = 2;
 				foreach($acc as $val){
 					
 					$gl_tranStart = $this->db->select('sum(amount) as startAmount')->from('gl_trans');
@@ -16574,42 +16567,71 @@ class Reports extends MY_Controller
 					if($gltran_list) {
 						$acc_name = $val->accountcode . ' ' .$val->accountname;
 						$start_amount = $this->erp->formatMoney($startAmount->startAmount);
-						
-						$this->excel->getActiveSheet()->mergeCells('A2:B2:C2:D2')->setCellValue('A2' , "Account ".$acc_name);
-						$this->excel->getActiveSheet()->mergeCells('E2:F2')->setCellValue('E2' , lang('Begining Balance: '));
-						$this->excel->getActiveSheet()->mergeCells('G2:H2')->setCellValue('G2' , $start_amount);
-					}
-					
-					
-					$row = 3;
+
+                        $this->excel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row)->setCellValue('A' . $row, "Account " . $acc_name);
+                        $this->excel->getActiveSheet()->mergeCells('E' . $row . ':G' . $row)->setCellValue('E' . $row, lang('Begining Balance: '));
+                        $this->excel->getActiveSheet()->setCellValue('H' . $row, $start_amount);
+
+                        $this->excel->getActiveSheet()->getStyle('H' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $this->excel->getActiveSheet()->getStyle('E' . $row . ':H' . $row)->getFont()->setBold(true);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->getFont()->setSize(12);
+                        $styleArrays = array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => 'ededed')
+                            )
+                        );
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->applyFromArray($styleArrays);
+
+                        $row++;
+
 					$endAccountBalance = 0;
 					foreach($gltran_list as $rw){
-						$endAccountBalance += $rw->amount; 
-						
+                        $endAccountBalance += $rw->amount;
 						$this->excel->getActiveSheet()->SetCellValue('A'.$row,$rw->tran_id);
 						$this->excel->getActiveSheet()->SetCellValue('B'.$row,$rw->reference_no);
 						$this->excel->getActiveSheet()->SetCellValue('C'.$row,$rw->tran_no);
-						$this->excel->getActiveSheet()->SetCellValue('D'.$row,$rw->narrative);
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, strip_tags($rw->description));
 						$this->excel->getActiveSheet()->SetCellValue('E'.$row,$rw->tran_date);
 						$this->excel->getActiveSheet()->SetCellValue('F'.$row, $rw->tran_type);
 						$this->excel->getActiveSheet()->SetCellValue('G'.$row,($rw->amount > 0 ? $this->erp->formatMoney($rw->amount) : '0.00'));
 						$this->excel->getActiveSheet()->SetCellValue('H'.$row,($rw->amount < 1 ? $this->erp->formatMoney(abs($rw->amount)) : '0.00'));
+
+                        $this->excel->getActiveSheet()->getStyle('A' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('C' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('E' . $row . ':G' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
 						$row++;
 					}
-					$this->excel->getActiveSheet()->mergeCells('A'.($row+1).':B'.($row+1).':C'.($row+1).':D'.($row+1));
-					$this->excel->getActiveSheet()->mergeCells('E'.($row+1).':F'.($row+1))->setCellValue('E'.($row+1) , lang('Ending Balance: '));
-					$this->excel->getActiveSheet()->mergeCells('G'.($row+1).':H'.($row+1))->setCellValue('G'.($row+1) , $endAccountBalance);
-						
+
+                        $this->excel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row);
+                        $this->excel->getActiveSheet()->mergeCells('E' . $row . ':G' . $row)->setCellValue('E' . $row, lang('Ending Balance: '));
+                        $this->excel->getActiveSheet()->setCellValue('H' . $row, $endAccountBalance);
+
+
+                        $this->excel->getActiveSheet()->getStyle('H' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $this->excel->getActiveSheet()->getStyle('E' . $row . ':H' . $row)->getFont()->setBold(true);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->getFont()->setSize(12);
+                        $styleArrays = array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => 'f9f9f9')
+                            )
+                        );
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->applyFromArray($styleArrays);
+                        $row++;
+                    }
+
 				}
-				
-				$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
 				
 				$this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 				$filename = 'Cash_Books_Report' . date('Y_m_d_H_i_s');
