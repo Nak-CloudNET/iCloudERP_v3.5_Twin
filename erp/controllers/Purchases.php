@@ -9354,7 +9354,7 @@ class Purchases extends MY_Controller
 
 	public function supplier_opening_balance()
     {
-        $this->erp->checkPermissions('csv');
+        $this->erp->checkPermissions('opening_ap', NULL, 'purchases');
         $this->load->helper('security');
         $this->form_validation->set_message('is_natural_no_zero', $this->lang->line("no_zero_required"));
         $this->form_validation->set_rules('userfile', $this->lang->line("upload_file"), 'xss_clean');
