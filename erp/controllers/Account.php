@@ -1346,7 +1346,7 @@ class Account extends MY_Controller
 						CONCAT(".$this->db->dbprefix('sales') . ".suspend_note, ' - ',  " . $this->db->dbprefix('payments') . ".note) 
 						ELSE " . $this->db->dbprefix('payments') . ".note END
 						), 
-						" . $this->db->dbprefix('payments') . ".paid_by, IF(erp_payments.type = 'returned', CONCAT('-', erp_payments.amount), erp_payments.amount) as amount, " . $this->db->dbprefix('payments') . ".type")
+						" . $this->db->dbprefix('payments') . ".paid_by, IF(erp_payments.type = 'returned', CONCAT('-', erp_payments.amount), erp_payments.amount) as amount, " . $this->db->dbprefix('payments') . ".type, erp_sales.sale_status")
 					->from('payments')
 					->join('sales', 'payments.sale_id=sales.id', 'left')
 					->join('purchases', 'payments.purchase_id=purchases.id', 'left')
