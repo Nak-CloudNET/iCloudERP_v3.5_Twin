@@ -32,3 +32,7 @@ ADD COLUMN `product_unit` varchar(255) DEFAULT NULL;
 
 ALTER TABLE `erp_companies`
 ADD COLUMN `supplier_type`  tinyint(1) NULL AFTER `public_charge_id`;
+
+/* 08/06/2018 By Kaoly */
+ALTER TABLE `erp_permissions`
+ADD COLUMN `purchase_report-deposit_by_supplier`  tinyint(1) NULL AFTER `purchases_add-expenses`;

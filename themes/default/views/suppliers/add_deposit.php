@@ -13,32 +13,20 @@
 			<input type="hidden" name="supplier_id" value="<?= $supplier->id;?>"/>
             <div class="row">
                 <div class="col-sm-12">
+				
 					<div class="form-group">
 						<?= lang('reference_no', 'reference_no'); ?>
 						<?= form_input('reference_no', $reference, 'class="form-control tip"  required  id="reference_no"'); ?>
 						<input type="hidden"  name="temp_reference_no"  id="temp_reference_no" value="<?= $reference ?>" />
 					</div>
-					<?php if ($Owner || $Admin) { ?>
-						<div class="form-group">
-							<?= lang("project", "biller"); ?>
-							<?php
-							foreach ($billers as $biller) {
-								$bl[$biller->id] = $biller->company != '-' ? $biller->company : $biller->name;
-							}
-							echo form_dropdown('biller', $bl, (isset($_POST['biller']) ? $_POST['biller'] : $Settings->default_biller), 'class="form-control" id="posbiller" required="required"');
-							?>
-						</div>
-					<?php } else {
-						$biller_input = array(
-							'type' => 'hidden',
-							'name' => 'biller',
-							'id' => 'posbiller',
-							'value' => $this->session->userdata('biller_id'),
-						);
-
-						echo form_input($biller_input);
-					}
-					?>
+					
+					<div class="form-group">
+                        <?php
+                        $default_value = $biller_id;
+                        echo  get_dropdown_project('biller', 'posbiller',$default_value);
+                        ?>
+                        <input type="hidden" name ="biller_id" id="biller_id" value="<?=$biller_id?>">
+                    </div>
 					
 					<!--<div class="form-group">
                         <?= lang("suppliers", "suppliers"); ?>
@@ -51,14 +39,14 @@
 							?>
                     </div>-->
 				
-                    <?php if ($Owner || $Admin) { ?>
+                   
                     <div class="form-group">
                         <?php echo lang('date', 'date'); ?>
                         <div class="controls">
                             <?php echo form_input('date', set_value('date', date($dateFormats['php_ldate'])), 'class="form-control datetime" id="date" required="required"'); ?>
                         </div>
                     </div>
-                    <?php } ?>
+                    
 
                     <div class="form-group">
                         <?php echo lang('amount', 'amount'); ?>

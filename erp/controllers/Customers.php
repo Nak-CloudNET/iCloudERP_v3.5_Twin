@@ -1038,7 +1038,7 @@ class Customers extends MY_Controller
                 'company_id' => $deposit->company_id,
                 'updated_by' => $this->session->userdata('user_id'),
                 'updated_at' => $date = date('Y-m-d H:i:s'),
-				'biller_id' => $this->input->post('biller'),
+				'biller_id' => $this->input->post('biller_id'),
 				'bank_code' => $this->input->post('bank_account'),
 				'status' => $this->input->post('status')
             );
@@ -1054,14 +1054,13 @@ class Customers extends MY_Controller
 				'cc_year' => $this->input->post('pcc_year'),
 				'cc_type' => $this->input->post('pcc_type'),
 				'note' => $this->input->post('note') ? $this->input->post('note') : $company->name,
-				'biller_id'	=> $this->input->post('biller'),
+				'biller_id'	=> $this->input->post('biller_id'),
 				'bank_account' => $this->input->post('bank_account')
 			);
 
             $cdata = array(
                 'deposit_amount' => ($company->deposit_amount-$this->input->post('amount'))
-            );
-			//$this->erp->print_arrays($id, $data, $cdata, $payment);
+            );			
         } elseif ($this->input->post('edit_deposit')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect($_SERVER["HTTP_REFERER"]);

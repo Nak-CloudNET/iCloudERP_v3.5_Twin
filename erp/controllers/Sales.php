@@ -632,7 +632,7 @@ class Sales extends MY_Controller
 
         '</ul></div></div>';
         
-        $biller_id = $this->session->userdata('biller_id');
+        $biller_id = json_decode($this->session->userdata('biller_id'));
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
@@ -646,14 +646,13 @@ class Sales extends MY_Controller
 							(COALESCE(erp_sales.grand_total,0)-COALESCE((SELECT SUM(erp_return_sales.grand_total) FROM erp_return_sales WHERE erp_return_sales.sale_id = erp_sales.id), 0)-COALESCE( (SELECT SUM(IF((erp_payments.paid_by != 'deposit' AND ISNULL(erp_payments.return_id)), erp_payments.amount, IF(NOT ISNULL(erp_payments.return_id), ((-1)*erp_payments.amount), 0))) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id),0)- COALESCE((SELECT SUM(IF(erp_payments.paid_by = 'deposit', erp_payments.amount, 0)) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id  ),0)-SUM(COALESCE(erp_payments.discount,0)) ) as balance, 
 							sales.payment_status, sales.attachment, sales.join_lease_id")
 				->from('sales')
-				->join('companies', 'companies.id = sales.customer_id', 'left')
-                ->join('users', 'users.id = sales.saleman_by', 'left')
-				->join('users bill', 'bill.id = sales.created_by', 'left')
+				->join('users', 'users.id = sales.saleman_by', 'left')
 				->join('sale_order', 'sale_order.id = sales.so_id', 'left')
 				->join('payments', 'payments.sale_id = sales.id', 'left')
 				->join('group_areas', 'group_areas.areas_g_code = sales.group_areas_id', 'left')
-				->join('erp_quotes', 'erp_quotes.id = sales.quote_id', 'left')
-                ->where('sales.biller_id', $biller_id);
+				->join('quotes', 'quotes.id = sales.quote_id', 'left')
+				->join('companies', 'companies.id = sales.customer_id', 'left')
+                ->where_in('sales.biller_id', $biller_id);
 
                 if (count($warehouse_ids) > 1) {
                     $this->datatables->where_in('sales.warehouse_id', $warehouse_ids);

@@ -596,8 +596,6 @@ class Suppliers extends MY_Controller
 	
 	function deposits($supplier_id = NULL)
     {
-        $this->erp->checkPermissions(false, true);
-
         if ($this->input->get('id')) {
             $supplier_id = $this->input->get('id');
         }
@@ -611,7 +609,7 @@ class Suppliers extends MY_Controller
 	function get_deposits($id)
     {
 		
-        $this->erp->checkPermissions('deposits');
+        //$this->erp->checkPermissions('deposits');
 		
 		$deposit_receipt = anchor('suppliers/deposit_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('deposit_receipt'), 'data-toggle="modal" data-target="#myModal2"');
         
@@ -693,17 +691,19 @@ class Suppliers extends MY_Controller
 			$company = $this->site->getCompanyByID($supplier_id);
 			$reference = $this->site->getReference('sd') ? $this->site->getReference('pp'): $this->input->post('reference_no');
 
-            if ($this->Owner || $this->Admin) {
+            /* if ($this->Owner || $this->Admin) {
                 $date = $this->erp->fld(trim($this->input->post('date')));
             } else {
                 $date = date('Y-m-d H:i:s');
-            }
+            }*/
+			$date = $this->erp->fld(trim($this->input->post('date')));
 			$reference_no=$this->input->post('po_reference_no');
 			$po_paid=$this->input->post('po_paid');
-			$amount_dep=$this->input->post('amount');
+			$amount_dep=$this->input->post('amount');			
 			$po=array(
 				'paid' => $po_paid+$amount_dep,
 			);
+			
             $data = array(
                 'reference' 		=> $reference,
                 'po_reference_no' 	=> $this->input->post('po_reference_no'),
@@ -714,7 +714,7 @@ class Suppliers extends MY_Controller
                 'company_id' 		=> $company->id,
                 'created_by'		=> $this->session->userdata('user_id'),
 				'bank_code' 		=> $this->input->post('bank_account'),
-				'biller_id' 		=> $this->input->post('biller'),
+				'biller_id' 		=> $this->input->post('biller_id'),
 				'status' 			=> 'deposit'
             );
 			$payment = array(
@@ -731,8 +731,8 @@ class Suppliers extends MY_Controller
 				'note'         => $this->input->post('note') ? $this->input->post('note') : $company->name,
 				'created_by'   => $company->id,
 				'bank_account' => $this->input->post('bank_account'),
-				'type' => 'received',
-				'biller_id'	   => $this->input->post('biller')
+				'type' 		   => 'received',
+				'biller_id'	   => $this->input->post('biller_id')
 			);
             $cdata = array(
                 'deposit_amount' => ($company->deposit_amount + $this->input->post('amount'))
@@ -743,12 +743,42 @@ class Suppliers extends MY_Controller
             redirect($_SERVER['HTTP_REFERER']);
         }
 
-        if ($this->form_validation->run() == true && $this->companies_model->addSupplierDeposit($data, $cdata, $payment,$po,$reference_no)) {
+        if ($this->form_validation->run() == true && $this->companies_model->addSupplierDeposit($data, $cdata, $payment, $po, $reference_no)) {
             $this->session->set_flashdata('message', lang("deposit_added"));
             redirect($_SERVER['HTTP_REFERER']);
         } else {
+			if ($this->Owner || $this->Admin || !$this->session->userdata('biller_id')){
+                if($this->Settings->system_management == 'biller') {
+                    if($so_id > 0) {
+                        $sale_order = $this->site->getSaleOrderByID($so_id);
+                        $biller_id = $sale_order->biller_id;
+                        $this->data['biller_id'] = $biller_id;
+                        $this->data['reference'] = $this->site->getReference('pp',$biller_id);
+                    }else {
+                        $biller_id = $this->site->get_setting()->default_biller;
+                        $this->data['biller_id'] = $biller_id;
+                        $this->data['reference'] = $this->site->getReference('pp',$biller_id);
+                    }
+                }
+
+            }else{
+                if($this->Settings->system_management == 'biller') {
+                    if($so_id > 0) {
+                        $sale_order = $this->site->getSaleOrderByID($so_id);
+                        $biller_id = $sale_order->biller_id;
+                        $this->data['biller_id'] = $biller_id;
+                        $this->data['reference'] = $this->site->getReference('pp',$biller_id);
+                    }else {
+                        $biller_ids = $this->session->userdata('biller_id');
+                        $arr = json_decode($biller_ids);
+                        $biller_id = $arr[0];
+                        $this->data['biller_id'] = $biller_id;
+                        $this->data['reference'] = $this->site->getReference('pp',$biller_id);
+                    }
+                }
+            }
 			$this->data['po_reference'] = $this->companies_model->getPOReference();
-			$this->data['reference'] = $this->site->getReference('pp');
+			//$this->data['reference'] = $this->site->getReference('pp');
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 			$company = $this->companies_model->getCompanyByID($id);
 			$this->data['billers'] = $this->site->getAllCompanies('biller');
@@ -763,7 +793,7 @@ class Suppliers extends MY_Controller
 	
 	function edit_deposit($id = NULL)
     {
-        $this->erp->checkPermissions('deposits', true);
+        //$this->erp->checkPermissions('deposits', true);
 		
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
@@ -795,7 +825,7 @@ class Suppliers extends MY_Controller
                 'updated_by' => $this->session->userdata('user_id'),
                 'updated_at' => $date = date('Y-m-d H:i:s'),
 				'bank_code' => $this->input->post('bank_account'),
-				'biller_id' => $this->input->post('biller')
+				'biller_id' => $this->input->post('biller_id')
             );
 			
 			$payment = array(
@@ -814,7 +844,7 @@ class Suppliers extends MY_Controller
 				'note' => $this->input->post('note') ? $this->input->post('note') : $company->name,
 				'bank_account' => $this->input->post('bank_account'),
 				'type' => 'received',
-				'biller_id'	=> $this->input->post('biller')
+				'biller_id'	=> $this->input->post('biller_id')
 			);           
 
         } elseif ($this->input->post('edit_deposit')) {
@@ -826,7 +856,6 @@ class Suppliers extends MY_Controller
             $this->session->set_flashdata('message', lang("deposit_updated"));
             redirect("suppliers");
         } else {
-			
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 			$this->data['billers'] = $this->site->getAllCompanies('biller');
             $this->data['modal_js'] = $this->site->modal_js();

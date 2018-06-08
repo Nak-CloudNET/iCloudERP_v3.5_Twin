@@ -1275,8 +1275,10 @@
 											
 											<input type="checkbox" value="1" class="checkbox" id="purchase_report-expense"
                                                      name="purchase_report-expense" <?php echo $p->{'purchase_report-expense'} ? "checked" : ''; ?>><label
-                                                  for="purchase_report-expense" class="padding05"><?= lang('expense_report') ?></label><br/><br/>
-												  
+                                                  for="purchase_report-expense" class="padding05"><?= lang('expense_report') ?></label><br/>
+											<input type="checkbox" value="1" class="checkbox" id="purchase_report-deposit_by_supplier"
+                                                     name="purchase_report-deposit_by_supplier" <?php echo $p->{'purchase_report-deposit_by_supplier'} ? "checked" : ''; ?>><label
+                                                  for="purchase_report-deposit_by_supplier" class="padding05"><?= lang('deposit_by_supplier') ?></label><br/><br/>	  
                                           </div>  
                                         </div>
 										

@@ -1400,13 +1400,14 @@ class system_settings extends MY_Controller
                 'reports-product_top_sale' => $this->input->post('reports-product_top_sale'),
 				'report_list_using_stock' => $this->input->post('report_list_using_stock'),
 				'report_transfers' => $this->input->post('report_transfers'),
-				'purchase_report-expense' => $this->input->post('purchase_report-expense')
+				'purchase_report-expense' => $this->input->post('purchase_report-expense'),
+				'purchase_report-deposit_by_supplier' => $this->input->post('purchase_report-deposit_by_supplier')
             );
 			
             if (POS) {
                 $data['pos-index'] = $this->input->post('pos-index');
             }
-			//$this->erp->print_arrays($data);            
+			            
         }
 
 		

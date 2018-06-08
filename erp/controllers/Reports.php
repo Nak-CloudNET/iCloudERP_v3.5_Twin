@@ -43,7 +43,7 @@ class Reports extends MY_Controller
 	function getdepositBySupplierExport($pdf = NULL, $excel =NULL, $supplier = NULL, $start_date2 = NULL, $end_date2 = NULL)
 	{        
         
-		//echo $supplier.'////'.$start_date2.'////'.$end_date2.'///'; exit();
+		$this->erp->checkPermissions('deposit_by_supplier',NULL,'purchase_report');
 		if ($pdf || $excel) {        					
            
                 $this->load->library('excel');
@@ -171,6 +171,7 @@ class Reports extends MY_Controller
 	
 	function getdepositBySupplier()
 	{
+		$this->erp->checkPermissions('deposit_by_supplier',NULL,'purchase_report');
 		if($this->input->post('start_date')){
 			$start_date =  $this->erp->fld($this->input->post('start_date'));
 			$this->data['start_date2'] = trim($start_date);

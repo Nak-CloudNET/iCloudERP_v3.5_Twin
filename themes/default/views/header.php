@@ -82,10 +82,11 @@
                 <a class="navbar-brand" href="<?= site_url() ?>"><span class="logo"><?= $Settings->site_name ?></span></a>
 
                 <div class="btn-group visible-xs pull-right btn-visible-sm">
-                    <a class="btn bdarkGreen" style="margin-left:10px !important;margin-right:10px !important;margin-top:1px !important;padding-right:10px !important" title="<?= lang('pos') ?>" data-placement="left" href="<?= site_url('pos') ?>">
+                    <!--
+					<a class="btn bdarkGreen" style="margin-left:10px !important;margin-right:10px !important;margin-top:1px !important;padding-right:10px !important" title="<?= lang('pos') ?>" data-placement="left" href="<?= site_url('pos') ?>">
                         <i class="fa fa-th-large"></i> <span class="padding02"><?= lang('pos') ?></span>
                     </a>
-
+					-->
                     <button class="navbar-toggle btn" type="button" data-toggle="collapse" data-target="#sidebar_menu">
                         <span class="fa fa-bars"></span>
                     </button>
@@ -1738,12 +1739,7 @@
 															<a href="<?= site_url('reports/project_plan_report') ?>">
 																<i class="fa fa-barcode"></i><span class="text"> <?= lang('project_plan_report'); ?></span>
 															</a>
-														</li> -->
-														<li id="reports_getdepositBySupplier">
-															<a href="<?= site_url('reports/getdepositBySupplier') ?>">
-																<i class="fa fa-building"></i><span class="text"> <?= lang('deposit_by_supplier'); ?></span>
-															</a>
-														</li>
+														</li> -->														
 													</ul>
 												</li>
 															
@@ -1786,7 +1782,11 @@
 															</a>
 														</li>
 														-->
-														
+														<li id="reports_getdepositBySupplier">
+															<a href="<?= site_url('reports/getdepositBySupplier') ?>">
+																<i class="fa fa-building"></i><span class="text"> <?= lang('deposit_by_supplier'); ?></span>
+															</a>
+														</li>
 													</ul>
 												</li>
 												
@@ -2004,6 +2004,7 @@
 									<ul>
 										<?php 
 										if ($GP['pos-index']) { ?>
+										<!--
 											<li id="pos_sales">
 												<a class="submenu" href="<?= site_url('pos/sales'); ?>">
 													<i class="fa fa-heart"></i><span class="text"> <?= lang('pos_sales'); ?></span>
@@ -2015,6 +2016,7 @@
 												<span class="text"> <?= lang('add_pos_sale'); ?></span>
 											</a>
 											</li>
+										-->
 										<?php }
 										if ($GP['sale_order-index']) { ?>
 											<li id="sale_order_list_sale_order">
@@ -2438,6 +2440,7 @@
 												</a>
 											</li>
 										<?php } ?> -->
+										
 										<?php if ($GP['account_setting']) { ?>
 											<li id="account_settings">
 												<a href="<?= site_url('account/settings') ?>">
@@ -2723,14 +2726,14 @@
 												</li>
                                                 <?php } ?>
 
-												<?php if (POS) { ?>
+											<!--	<?php if (POS) { ?>
 												<li id="reports_register">
 													<a href="<?= site_url('reports/register') ?>">
 														<i class="fa fa-money"></i><span class="text"> <?= lang('register_report'); ?></span>
 													</a>
 												</li>
 												<?php } ?>
-
+											-->
 											</ul>
 										</li>
 										<?php } ?>
@@ -2996,7 +2999,7 @@
 										</li>
 										<?php }?>
 										
-										<?php if($GP['purchase_report-index']) { ?>
+										<?php if($GP['purchase_report-index'] || $GP['purchase_report-purchas'] || $GP['purchase_report-daily'] || $GP['purchase_report-monthly'] || $GP['purchase_report-supplier'] || $GP['purchase_report-deposit_by_supplier']) { ?>
 										<li class="mm_purchase_report">
 											<a class="dropmenu" href="#">
 												<i class="fa fa-star"></i>
@@ -3004,7 +3007,7 @@
 												<span class="chevron closed"></span>
 											</a>
 											<ul>
-												<?php if($GP['purchase_report-purchas']){ ?>
+												<?php if($GP['purchase_report-purchase']){ ?>
 												<li id="reports_purchases">
 													<a href="<?= site_url('reports/purchases') ?>">
 														<i class="fa fa-star"></i><span class="text"> <?= lang('purchases_report'); ?></span>
@@ -3032,6 +3035,14 @@
 														<i class="fa fa-users"></i><span class="text"> <?= lang('suppliers_report'); ?></span>
 													</a>
 												</li>
+												<?php } ?>
+												
+												<?php if($GP['purchase_report-deposit_by_supplier']){ ?>
+													<li id="reports_getdepositBySupplier">
+														<a href="<?= site_url('reports/getdepositBySupplier') ?>">
+															<i class="fa fa-building"></i><span class="text"> <?= lang('deposit_by_supplier'); ?></span>
+														</a>
+													</li>
 												<?php } ?>
 											</ul>
 										</li>

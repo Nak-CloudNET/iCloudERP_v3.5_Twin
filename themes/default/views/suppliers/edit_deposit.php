@@ -31,27 +31,11 @@
 								</div>
 							</div>
 						</div>
-					<?php if ($Owner || $Admin) { ?>
-						<div class="form-group">
-							<?= lang("project", "biller"); ?>
-							<?php
-							foreach ($billers as $biller) {
-								$bl[$biller->id] = $biller->company != '-' ? $biller->company : $biller->name;
-							}
-							echo form_dropdown('biller', $bl, (isset($_POST['biller']) ? $_POST['biller'] : $deposit->biller_id), 'class="form-control" id="posbiller" required="required"');
-							?>
-						</div>
-					<?php } else {
-						$biller_input = array(
-							'type' => 'hidden',
-							'name' => 'biller',
-							'id' => 'posbiller',
-							'value' => $this->session->userdata('biller_id'),
-						);
-
-						echo form_input($biller_input);
-					}
-					?>
+					
+					<div class="form-group">
+						<?= get_dropdown_project('biller', 'slbiller', $deposit->biller_id); ?>
+						<input type="hidden" name ="biller_id" id="biller_id" value="<?= $deposit->biller_id ?> ">
+					</div>
 				
                     <?php if ($Owner || $Admin) { ?>
                     <div class="form-group">

@@ -562,8 +562,9 @@ class Companies_model extends CI_Model
 				return false;
 			}
 	}
-	public function addSupplierDeposit($data, $cdata, $payment = array(),$po,$reference_no)
+	public function addSupplierDeposit($data, $cdata, $payment = array(), $po, $reference_no)
     {
+		
 		if ($this->db->insert('deposits', $data)) {
 			$deposit_id = $this->db->insert_id();
 			$this->db->update('companies', $cdata, array('id' => $data['company_id']));
@@ -571,7 +572,7 @@ class Companies_model extends CI_Model
 				$payment['purchase_deposit_id'] = $deposit_id;
 				if ($this->db->insert('payments', $payment)) {
 					if ($this->site->getReference('pp') == $payment['reference_no']) {
-						$this->site->updateReference('pp');
+						$this->site->updateReference('pp', $payment['biller_id']);
 					}
 					if ($payment['paid_by'] == 'gift_card') {
 						$gc = $this->site->getGiftCardByNO($payment['cc_no']);
@@ -623,6 +624,7 @@ class Companies_model extends CI_Model
         }
         return false;
     }
+	
 	public function createDriver($data = array()) {
 		if($data) {
 			if($this->db->insert('companies', $data)) {
