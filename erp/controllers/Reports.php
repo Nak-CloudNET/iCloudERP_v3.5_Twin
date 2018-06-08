@@ -16489,19 +16489,19 @@ class Reports extends MY_Controller
 		}else{
 			$this->data['billers'] = $this->site->getAllCompanies('biller');
 		}
-		
-		if ($pdf != NULL && $biller_id == NULL) {
+
+        /*if ($pdf != NULL && $biller_id == NULL) {
             $html = $this->load->view($this->theme . 'reports/cash_books', $this->data, true);
             $name = lang("cash_books") . "_" . date('Y_m_d_H_i_s') . ".pdf";
             $html = str_replace('<p class="introtext">' . lang("reports_cash_books_text") . '</p>', '', $html);
             $this->erp->generate_pdf($html, $name, null, null, null, null, null, 'L');
-        }
+        }*/
 		
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Cash_Books_Report')));
         $meta = array('page_title' => lang('Cash_Books_Report'), 'bc' => $bc);
         $this->page_construct('reports/cash_books', $meta, $this->data);
-    
-		if($xls){
+
+        if ($xls || $pdf) {
 			
 			$styleArray = array(
 				'font'  => array(
@@ -16635,6 +16635,26 @@ class Reports extends MY_Controller
 				
 				$this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 				$filename = 'Cash_Books_Report' . date('Y_m_d_H_i_s');
+
+                if ($pdf) {
+                    $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+                    require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
+                    $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+                    $rendererLibrary = 'MPDF';
+                    $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
+                    if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+                        die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
+                            PHP_EOL . ' as appropriate for your directory structure');
+                    }
+
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
+                    header('Cache-Control: max-age=0');
+
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
+                    $objWriter->save('php://output');
+                    exit();
+                }
 				if ($xls) {
 					header('Content-Type: application/vnd.ms-excel');
 					header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
