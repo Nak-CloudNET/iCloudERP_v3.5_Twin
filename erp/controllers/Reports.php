@@ -16489,19 +16489,19 @@ class Reports extends MY_Controller
 		}else{
 			$this->data['billers'] = $this->site->getAllCompanies('biller');
 		}
-		
-		if ($pdf != NULL && $biller_id == NULL) {
+
+        /*if ($pdf != NULL && $biller_id == NULL) {
             $html = $this->load->view($this->theme . 'reports/cash_books', $this->data, true);
             $name = lang("cash_books") . "_" . date('Y_m_d_H_i_s') . ".pdf";
             $html = str_replace('<p class="introtext">' . lang("reports_cash_books_text") . '</p>', '', $html);
             $this->erp->generate_pdf($html, $name, null, null, null, null, null, 'L');
-        }
+        }*/
 		
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Cash_Books_Report')));
         $meta = array('page_title' => lang('Cash_Books_Report'), 'bc' => $bc);
         $this->page_construct('reports/cash_books', $meta, $this->data);
-    
-		if($xls){
+
+        if ($xls || $pdf) {
 			
 			$styleArray = array(
 				'font'  => array(
@@ -16511,27 +16511,21 @@ class Reports extends MY_Controller
 					'name'  => 'Verdana'
 				)
 			);
-			$bold = array(
-				'font' => array(
-					'bold' => true
-				)
-			);
 			
 			$this->load->library('excel');
 			$this->excel->setActiveSheetIndex(0);
-			$this->excel->getActiveSheet()->getStyle('A1:E1')->applyFromArray($styleArray);
+            $this->excel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArray);
 			$this->excel->getActiveSheet()->setTitle(lang('Cash Book Statement'));
 			$this->excel->getActiveSheet()->SetCellValue('A1', lang('Batch'));
 			$this->excel->getActiveSheet()->SetCellValue('B1', lang('Reference'));
 			$this->excel->getActiveSheet()->SetCellValue('C1', lang('Seq'));
-			$this->excel->getActiveSheet()->SetCellValue('D1', lang('Description'));
-			$this->excel->getActiveSheet()->SetCellValue('E1', lang('Date'));
-			$this->excel->getActiveSheet()->SetCellValue('F1', lang('Type'));
-			$this->excel->getActiveSheet()->SetCellValue('G1', lang('Debit_Amount'));
-			$this->excel->getActiveSheet()->SetCellValue('H1', lang('Credit_Amount'));
-			
-			$this->excel->getActiveSheet()->getStyle('E2:F2')->applyFromArray($bold);
-			$this->excel->getActiveSheet()->getStyle('G2:H2')->applyFromArray($bold);
+            $this->excel->getActiveSheet()->SetCellValue('D1', lang('Cashier'));
+			$this->excel->getActiveSheet()->SetCellValue('E1', lang('Description'));
+			$this->excel->getActiveSheet()->SetCellValue('F1', lang('Date'));
+			$this->excel->getActiveSheet()->SetCellValue('G1', lang('Type'));
+			$this->excel->getActiveSheet()->SetCellValue('H1', lang('Debit_Amount'));
+			$this->excel->getActiveSheet()->SetCellValue('I1', lang('Credit_Amount'));
+            $this->excel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
 			if ($this->input->post('start_date') || $this->input->post('end_date') || (!$this->input->post('end_date') && !$this->input->post('end_date'))) {
 					
@@ -16542,7 +16536,7 @@ class Reports extends MY_Controller
 				}
 				
 				$acc = $accounntCode->get()->result();
-				
+                $row = 2;
 				foreach($acc as $val){
 					
 					$gl_tranStart = $this->db->select('sum(amount) as startAmount')->from('gl_trans');
@@ -16550,7 +16544,7 @@ class Reports extends MY_Controller
 					$startAmount = $gl_tranStart->get()->row();
 					
 					$endAccountBalance = 0;
-					$getListGLTran = $this->db->select("*")->from('gl_trans')->where('account_code =', $val->accountcode);
+					$getListGLTran = $this->db->select("gl_trans.*, users.username as cashier")->from('gl_trans')->join('users', 'gl_trans.created_by = users.id', 'left')->where('account_code =', $val->accountcode);
 					if ($this->input->post('start_date')) {
 						$getListGLTran->where('tran_date >=', $this->erp->fld($this->input->post('start_date')) );
 					}
@@ -16566,6 +16560,9 @@ class Reports extends MY_Controller
 					if($biller_id != "" && $biller_id != NULL && $biller_id != 0){
 						$getListGLTran->where('biller_id', $biller_id);
 					}
+                    if($cashier != '' || $cashier != NULL){
+                        $getListGLTran->where('gl_trans.created_by', $cashier);
+                    }
 					$gltran_list = $getListGLTran->get()->result();
 					
 					$acc_name = "";
@@ -16574,45 +16571,96 @@ class Reports extends MY_Controller
 					if($gltran_list) {
 						$acc_name = $val->accountcode . ' ' .$val->accountname;
 						$start_amount = $this->erp->formatMoney($startAmount->startAmount);
-						
-						$this->excel->getActiveSheet()->mergeCells('A2:B2:C2:D2')->setCellValue('A2' , "Account ".$acc_name);
-						$this->excel->getActiveSheet()->mergeCells('E2:F2')->setCellValue('E2' , lang('Begining Balance: '));
-						$this->excel->getActiveSheet()->mergeCells('G2:H2')->setCellValue('G2' , $start_amount);
-					}
-					
-					
-					$row = 3;
+
+                        $this->excel->getActiveSheet()->mergeCells('A' . $row . ':E' . $row)->setCellValue('A' . $row, "Account " . $acc_name);
+                        $this->excel->getActiveSheet()->mergeCells('F' . $row . ':H' . $row)->setCellValue('F' . $row, lang('Begining Balance: '));
+                        $this->excel->getActiveSheet()->setCellValue('I' . $row, $start_amount);
+
+                        $this->excel->getActiveSheet()->getStyle('I' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $this->excel->getActiveSheet()->getStyle('E' . $row . ':I' . $row)->getFont()->setBold(true);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':I' . $row)->getFont()->setSize(12);
+                        $styleArrays = array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => 'ededed')
+                            )
+                        );
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':I' . $row)->applyFromArray($styleArrays);
+
+                        $row++;
+
 					$endAccountBalance = 0;
 					foreach($gltran_list as $rw){
-						$endAccountBalance += $rw->amount; 
-						
+                        $endAccountBalance += $rw->amount;
 						$this->excel->getActiveSheet()->SetCellValue('A'.$row,$rw->tran_id);
 						$this->excel->getActiveSheet()->SetCellValue('B'.$row,$rw->reference_no);
-						$this->excel->getActiveSheet()->SetCellValue('C'.$row,$rw->tran_no);
-						$this->excel->getActiveSheet()->SetCellValue('D'.$row,$rw->narrative);
-						$this->excel->getActiveSheet()->SetCellValue('E'.$row,$rw->tran_date);
-						$this->excel->getActiveSheet()->SetCellValue('F'.$row, $rw->tran_type);
-						$this->excel->getActiveSheet()->SetCellValue('G'.$row,($rw->amount > 0 ? $this->erp->formatMoney($rw->amount) : '0.00'));
-						$this->excel->getActiveSheet()->SetCellValue('H'.$row,($rw->amount < 1 ? $this->erp->formatMoney(abs($rw->amount)) : '0.00'));
+                        $this->excel->getActiveSheet()->SetCellValue('C'.$row,$rw->tran_no);
+						$this->excel->getActiveSheet()->SetCellValue('D'.$row,$rw->cashier);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, strip_tags($rw->description));
+						$this->excel->getActiveSheet()->SetCellValue('F'.$row,$rw->tran_date);
+						$this->excel->getActiveSheet()->SetCellValue('G'.$row, $rw->tran_type);
+						$this->excel->getActiveSheet()->SetCellValue('H'.$row,($rw->amount > 0 ? $this->erp->formatMoney($rw->amount) : '0.00'));
+						$this->excel->getActiveSheet()->SetCellValue('I'.$row,($rw->amount < 1 ? $this->erp->formatMoney(abs($rw->amount)) : '0.00'));
+
+                        $this->excel->getActiveSheet()->getStyle('A' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('C' . $row.':D'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('F' . $row . ':I' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
 						$row++;
 					}
-					$this->excel->getActiveSheet()->mergeCells('A'.($row+1).':B'.($row+1).':C'.($row+1).':D'.($row+1));
-					$this->excel->getActiveSheet()->mergeCells('E'.($row+1).':F'.($row+1))->setCellValue('E'.($row+1) , lang('Ending Balance: '));
-					$this->excel->getActiveSheet()->mergeCells('G'.($row+1).':H'.($row+1))->setCellValue('G'.($row+1) , $endAccountBalance);
-						
+
+                        $this->excel->getActiveSheet()->mergeCells('A' . $row . ':E' . $row);
+                        $this->excel->getActiveSheet()->mergeCells('F' . $row . ':H' . $row)->setCellValue('F' . $row, lang('Ending Balance: '));
+                        $this->excel->getActiveSheet()->setCellValue('I' . $row, $endAccountBalance);
+
+
+                        $this->excel->getActiveSheet()->getStyle('I' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $this->excel->getActiveSheet()->getStyle('E' . $row . ':I' . $row)->getFont()->setBold(true);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':I' . $row)->getFont()->setSize(12);
+                        $styleArrays = array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => 'f9f9f9')
+                            )
+                        );
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':I' . $row)->applyFromArray($styleArrays);
+                        $row++;
+                    }
+
 				}
-				
-				$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-				$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
 				
 				$this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 				$filename = 'Cash_Books_Report' . date('Y_m_d_H_i_s');
+
+                if ($pdf) {
+                    $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+                    require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
+                    $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+                    $rendererLibrary = 'MPDF';
+                    $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
+                    if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+                        die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
+                            PHP_EOL . ' as appropriate for your directory structure');
+                    }
+
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
+                    header('Cache-Control: max-age=0');
+
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
+                    $objWriter->save('php://output');
+                    exit();
+                }
 				if ($xls) {
 					header('Content-Type: application/vnd.ms-excel');
 					header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
