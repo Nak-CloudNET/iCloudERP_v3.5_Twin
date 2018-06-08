@@ -1353,7 +1353,7 @@ class Account extends MY_Controller
 					->group_by('payments.id')
 					->order_by('sales.id desc');
 					if($this->session->userdata('biller_id')){
-						$this->datatables->where('payments.biller_id',$this->session->userdata('biller_id'));
+						$this->datatables->where_in('payments.biller_id', json_decode($this->session->userdata('biller_id')));
 					}
 					$this->db->where('payments.type != "sent"');
 					$this->db->where('sales.customer !=""');
