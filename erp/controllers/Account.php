@@ -1346,14 +1346,14 @@ class Account extends MY_Controller
 						CONCAT(".$this->db->dbprefix('sales') . ".suspend_note, ' - ',  " . $this->db->dbprefix('payments') . ".note) 
 						ELSE " . $this->db->dbprefix('payments') . ".note END
 						), 
-						" . $this->db->dbprefix('payments') . ".paid_by, IF(erp_payments.type = 'returned', CONCAT('-', erp_payments.amount), erp_payments.amount) as amount, " . $this->db->dbprefix('payments') . ".type")
+						" . $this->db->dbprefix('payments') . ".paid_by, IF(erp_payments.type = 'returned', CONCAT('-', erp_payments.amount), erp_payments.amount) as amount, " . $this->db->dbprefix('payments') . ".type, erp_sales.sale_status")
 					->from('payments')
 					->join('sales', 'payments.sale_id=sales.id', 'left')
 					->join('purchases', 'payments.purchase_id=purchases.id', 'left')
 					->group_by('payments.id')
 					->order_by('sales.id desc');
 					if($this->session->userdata('biller_id')){
-						$this->datatables->where('payments.biller_id',$this->session->userdata('biller_id'));
+						$this->datatables->where_in('payments.biller_id', json_decode($this->session->userdata('biller_id')));
 					}
 					$this->db->where('payments.type != "sent"');
 					$this->db->where('sales.customer !=""');

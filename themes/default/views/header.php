@@ -645,15 +645,15 @@
                                                 <span class="text"> <?= lang('customer_balance'); ?></span>
                                             </a>
                                         </li>
-									<!--	<?php if ($Owner || $Admin) { ?>
-											<li id="sales_customer_opening_balance">
-												<a class="submenu" href="<?= site_url('sales/customer_opening_balance'); ?>">
-													<i class="fa fa-money"></i>
-													<span class="text"> <?= lang('opening_ar'); ?></span>
-												</a>
-											</li>
-										<?php } ?>
 										
+										<li id="sales_customer_opening_balance">
+											<a class="submenu" href="<?= site_url('sales/customer_opening_balance'); ?>">
+												<i class="fa fa-money"></i>
+												<span class="text"> <?= lang('opening_ar'); ?></span>
+											</a>
+										</li>
+										
+										<!--
 										<li id="sales_gift_cards">
                                             <a class="submenu" href="<?= site_url('sales/gift_cards'); ?>">
                                                 <i class="fa fa-credit-card"></i>
@@ -666,24 +666,7 @@
                                                 <span class="text"> <?= lang('list_saleman_assign'); ?></span>
                                             </a>
                                         </li>
-                                        <li id="sales_house_calendar">
-                                            <a class="submenu" href="<?= site_url('sales/house_calendar'); ?>">
-                                                <i class="fa fa-building-o tip"></i>
-                                                <span class="text"> <?= lang('house_calendar'); ?></span>
-                                            </a>
-                                        </li>
-                                        <li id="sales_house_sales">
-                                            <a class="submenu" href="<?= site_url('sales/house_sales'); ?>">
-                                                <i class="fa fa-building"></i>
-                                                <span class="text"> <?= lang('list_house'); ?></span>
-                                            </a>
-                                        </li> 
-                                        <li id="sales_sales_loans">
-                                            <a class="submenu" href="<?= site_url('sales/sales_loans'); ?>">
-                                                <i class="fa fa-money"></i>
-                                                <span class="text"> <?= lang('installment'); ?></span>
-                                            </a>
-                                        </li>	-->								
+										-->								
                                         <li id="sales_return_sales">
                                             <a class="submenu" href="<?= site_url('sales/return_sales'); ?>">
                                                 <i class="fa fa-reply"></i>
@@ -773,14 +756,14 @@
                                                 <span class="text"> <?= lang('supplier_balance'); ?></span>
                                             </a>
                                         </li>
-										<?php if ($Owner || $Admin) { ?>
-											<li id="purchases_supplier_opening_balance">
-												<a class="submenu" href="<?= site_url('purchases/supplier_opening_balance'); ?>">
-													<i class="fa fa-money"></i>
-													<span class="text"> <?= lang('opening_ap'); ?></span>
-												</a>
-											</li>
-										<?php } ?>
+										
+										<li id="purchases_supplier_opening_balance">
+											<a class="submenu" href="<?= site_url('purchases/supplier_opening_balance'); ?>">
+												<i class="fa fa-money"></i>
+												<span class="text"> <?= lang('opening_ap'); ?></span>
+											</a>
+										</li>
+										
                                     <!--    <li id="purchases_return_purchases">
                                             <a class="submenu" href="<?= site_url('purchases/return_purchases'); ?>">
                                                 <i class="fa fa-reply"></i>
@@ -2161,7 +2144,7 @@
 								</li>
 							<?php } ?>
 
-							<?php if ($GP['purchases-index'] || $GP['purchases_order-index'] || $GP['purchase_request-index'] || $GP['purchases-expenses'] || $GP['purchases-return_list'] || $GP['purchases-return_list'] || $GP['purchases-supplier_balance']) { ?>
+							<?php if ($GP['purchases-index'] || $GP['purchases_order-index'] || $GP['purchase_request-index'] || $GP['purchases-expenses'] || $GP['purchases-return_list'] || $GP['purchases-return_list'] || $GP['purchases-supplier_balance'] || $GP['purchases-opening_ap']) { ?>
 								<li class="mm_purchases mm_purchases_request">
 									<a class="dropmenu" href="#">
 										<i class="fa fa-star"></i>
@@ -2268,17 +2251,14 @@
 											</li>
 										<?php } ?>
 										
-										<!-- purchases request -->
-										
-										<?php if ($GP['purchases-import_expanse']) { ?>
-											<!--<li id="purchases_expense_by_csv">
-												<a class="submenu" href="<?= site_url('purchases/expense_by_csv'); ?>">
-													<i class="fa fa-file-text"></i>
-													<span class="text"> <?= lang('import_expense'); ?></span>
+										<?php if ($GP['purchases-opening_ap']) { ?>
+											<li id="purchases_supplier_opening_balance">
+												<a class="submenu" href="<?= site_url('purchases/supplier_opening_balance'); ?>">
+													<i class="fa fa-money"></i>
+													<span class="text"> <?= lang('opening_ap'); ?></span>
 												</a>
-											</li>-->
+											</li>
 										<?php } ?>
-										
 									</ul>
 								</li>
 							<?php } ?>
