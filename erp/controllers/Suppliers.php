@@ -877,8 +877,8 @@ class Suppliers extends MY_Controller
     }
 	
 	public function return_deposit($id){
-		
-		$this->erp->checkPermissions('deposits', true);
+
+        //$this->erp->checkPermissions('deposits', true);
 		if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
