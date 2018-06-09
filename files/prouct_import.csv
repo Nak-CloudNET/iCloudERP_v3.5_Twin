@@ -1,0 +1,124 @@
+﻿Code,Name,Name KH,Category Code,Unit ID,Cost,Price,Alert Quantity, Tax Rate Name,Tax Method,Subcategory Code,Product Variants Separated by |,Supplier1(No),Supplier2(No),Supplier3(No),Supplier4(No),Supplier5(No),Custom Field 1,Custom Field 2,Custom Field 3,Custom Field 4,Custom Field 5,Custom Field 6,Image,Type(standard or service)
+APPLY-IMPORT ,APPLY IMPORT LICENSE AT CUSTOMS OFFICE,,S-1000,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+APPLY-LICENSE  ,APPLY LICENSE TO CUSTOMS,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+BILL ,B/L FEE,ថ្លៃBILL,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CAMCONTROL ,CAMCONTROL IMPORT PERMIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CAMCONTROL-17 ,CAMCONTROL CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CAMCONTROL0.1,CAMCONTROL 0.1%,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CAMCONTROL23 ,CAMCONTROL PERMIT CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CAMCONTROLPROCESSING ,CAMCONTROL PROCESSING FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CFS ,CFS,ថ្លៃCFS,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CHARGE-VIET ,CHARGE AT VIET NAM SIDE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CLEANING  ,CLEANING FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CLEARANCE-TRUCKING ,CLEARANCE & TRUCKING (CAT  LAI TO PHNOM PENH),,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CLEARANCE-12 ,CLEARANCE AT VIETNAM,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+COUNTER  ,COUNTER TREASURY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOM ,CUSTOMS VALUATION,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOM-PROCSSING-2 ,CUSTOMS PROCESSING FEE CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOMS ,CUSTOMS PERMIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOMS-23 ,CUSTOMS MOBILE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOMS-IMPORT ,CUSTOMS IMPORT PERMIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+CUSTOMS12 ,CUSTOMS VALUE APPROVAL,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+DEMURRAGE-12 ,DEMURRAGE CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+DEMURRANG ,DEMURRANG,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+DETENTION ,DETENTION,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00001 ,TRANSPORT SERVICE FEE,ថ្លៃសេវាកម្មដឹកជញ្ជូន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00002 ,CUSTOMS CLEARANCE,ថ្លៃសេវាគយ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00003 ,GATEWAY FEE,ថ្លៃចូលផែ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00004 ,DOCUMENT FEE,ថ្លៃឯកសារ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00005 ,HANDLING CHARGE,ថ្លៃសេវាកម្មក្រុមហ៊ុន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00006 ,FULER CHARGE,ថ្លៃប្រេង,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00007 ,CAMCONTROL CERTIFICATE,ថ្លៃលិខិតបញ្ជាក់់ពីCAMCONTROL ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00008 ,OVERTIME INSPECTION,បន្ថែមម៉ោងត្រួតពិនិត្យ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00009 ,OVERTIME DOCUMENT,យឺតឯកសារ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00010 ,OVERTIME DOCUMENT AT PORT,យឺតឯកសារនៅផែ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00011 ,OVERTIME CONTAINER AT PORT,បន្ថែមម៉ោងCONTAINERនៅផែ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00012 ,FIST APPLY DOCUMENT,ដាក់ឯកសារលើកដំបូង,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00013 ,LATE GET,ទទួលយឺត,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00014 ,FIST APPLY DOCUMENT NOT SEAL,ដាក់ឯកសារដំបូងមិនមានSEAL ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00015 ,STAND BY CONTAINER 1 NIGHT,ថ្លៃCONTAINERដេកមួយយប់,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00016 ,OVERTIME DOCUMENT TO VESSEL,យឺតឯកសារកប៉ាល់,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00017 ,OVERTIME CONTAINER TO VESSEL,បន្ថែមម៉ោងCONTAINERចូលកប៉ាល់,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00018 ,CUSTOMS  PROCESSING  FEE,ថ្លៃដំណើរការគយ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00026 ,INVOICE  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00027 ,AMS FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00028 ,CPF,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00029 ,SURVEY  CAMCONTROL  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00030 ,CAMCONTROL  INSPECTION  FEE,ថ្លៃការត្រួតពិនិត្យ​​​​​​​​​​​​​​ Camcontrol,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00031 ,AGENCY  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00032 ,AIR WAYBILL PREPARATION  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00033 ,TERMINAL  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00034 ,CLEARANCE  WITH  DEPOSIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00035 ,EXTRA  TRUCKING OUTSIDE  CITY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00036 ,TOLE  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00037 ,HANDLING  FEE,ថ្លៃសេវាកម្មក្រុមហ៊ុន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00038 ,SERVICE  FEE,ថ្លៃសេវាកម្ម,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00039 ,TRANSPORTATION  SERVICE,ថ្លៃសេវាដឹកជញ្ជូន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00040 ,OVERTIME  DOCUMENT AT  PP PORT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00041 ,SEAL,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00042 ,EXTRA TO CUSTOMS & CAMCONTROL,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00043 ,EXTRA TO CUSTOMS  AND CAMCONTROL  ON SATURDAY NIGHT LOCK SEAL  AT FACTORY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00044 ,EXTRA TO CUSTOMS FOR APPLY DOCUMENT  AT PORT ON SATURDAY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00045 ,CAMCONTROL  FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00046 ,CSF,ថ្លៃ CSF,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00047 ,PAY BEHALF  TO CAMBEST SHIPPING CO..LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00048 ,EXPRESS PERMIT 1 DAY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00049 ,PAY BEHALF TO FWF FULL WELL AND NISSHIN LOGISTICS CO..LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00050 ,PAY BEHALF TO MERIDIAN SHIPPING AGENCIES (CAMBODIA) PTE.LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00051 ,ONE MORE  DECLEARATION,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00052 ,TERMINAL  CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00053 ,TERMINAL HANDLING  CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00054 ,PAY  BEHALF TO MCC,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00055 ,PAY BEHALF TO CSKHA LINES CO..LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00056 ,PAY BEHALF TO SJ SHIPPING CO..LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00057 ,PAY BEHALF TO TWIN LOGISTICS (CAMBODIA) CO..LTD,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00058 ,YSC-17002 (1.12CBM),,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00059 ,YSC-17003 (4.77CBM),,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00060 ,YSC-17004 (2.17CBM),,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+E00061 ,YSC-17005 (7.16CBM),,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+EMPTY  ,EMPTY RETURN,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+EXPRESS ,EXPRESS CLEARANCE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+EXTRA12 ,EXTRA TRUCKING,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+FEE-VETNAM ,FEE AT VIETNAM SIDE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+FORM-12 ,FORM D VERIFY,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+handling ,HANDLING CHARGE,ថ្លៃសេវាកម្មក្រុមហុន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+HONG-KONG ,LUMP SUM CHARGE FROM HONG KONG TO PNH,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+IMPORT ,IMPORT DUTY TAX,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+IMPORT-CUSTOMS ,IMPORT CUSTOMS PERMIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+IMPORT-TAX-RECEIPT ,IMPORT TAX RECEIPT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+IMPORTPERMIT ,IMPORT PERMIT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+INSPECTION-FEE ,INSPECTION FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+kgks ,CARRIER CHARGE,ថ្លៃលើកផ្ទុកឡើង/ដាក់ចុះកប៉ាល់,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LABOR ,LABOR FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LIFT ,LIFT ON,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LOLO ,LOLO FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LOLO12 ,LOLO,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LUMPSUM ,LUMPSUM HCM DOOR TO PP DOOR,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+LUMSUM  ,LUMPSUM RATE IMPORT FROM BINH DOUNG . VIETNAM TO PNH,LUMPSUM RATE IMPORT FROM BINH DOUNG . VIETNAM TO P,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+NO-LICENCE ,NO LICENCE FROM MINISTRY OF HEALTH,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+non-original ,NON ORIGINAL INSURANCE,គ្មានការធានារ៉ាប់រងពីប្រភពដើម,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+NONINSURANCE ,NON INSURANCE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+OVER-11 ,OVER DEM & DET,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+PORT-12 ,PORT LIFT ON / OFF,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+PORT3 ,PORT GATE FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+RENTING-IMPORT  ,RENTING IMPORTER NAME,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SCAN ,SCANING FEE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SCANING-12 ,SCANING CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SEAL ,CUSTOMS SEAL,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SEFETY ,SEFETY TRUCK,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+servicecharge ,SERVICE CHARGE,ថ្លៃសេវាកម្ម,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SETTEL ,SETTLE WITH CUSTOMS,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SINGAPORE ,LUMPSUM RATE EXPORT FROM PNH-PORT SINGAPORE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+STAND-BY ,STAND BY CONTANER 1 NIGHT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+STORAGE-CHARGE ,STORAGE CHARGE,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SURRANDER ,SURRANDER B/L,ថ្លៃSURRANDER ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+SURVEY  ,SURVEY CAMCONTROL REPORT,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+thc ,THC FEE,ថ្លៃលើកផ្ទុកទ្បើងដាក់ចុះកប៉ាល់,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+Transport  ,TRANSPORTATION TO POI PET,ថ្លៃដឹកជញ្ញនទៅប៉ោយប៉ែត,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+transport-fee ,TRANSPORTATION TO SIEM REAP,ថ្លៃដឹកជញ្ជូនទៅសៀមរាប,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+transport1 ,TRANSPORTATION TO BATTAMBANG,ថ្លៃដឹកជញ្ជូនទៅបាត់ដំបង,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+Transportation ,TRANSPORTATION TO BANTEYMANCY,ថ្លៃដឹកជញ្ជូនទៅបន្ទាយមានជ័យ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+Transportation-fee ,TRANSPORTATION TO RATANNAKIRI,ថ្លៃដឹកជញ្ជូនទៅរតនគិរី,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+trucking ,TRANSPORTATION TO KRATIE,ថ្លៃដឹកជញ្ជូនទៅក្រចេះ,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+truckingfee ,TRUCKING FEE,ថ្លៃដឺកជញ្ជូន,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
+WRONG ,WRONG LOADING,,,,0,0,0, No Tax, exclusive,,,,,,,,,,,,,,no_image.png,service
