@@ -276,7 +276,7 @@
 								</tr>
 								<tr style="font-size:12px;font-weight:bold;font-family:Times New Roman !important;height:23px !important;">
 									<td colspan="2" style="background-color:#e2e0e0 !important;">IN WORD(USD): </td>
-									<td colspan="6" style="width:5%;vertical-align:middle;"><span style="padding-left:20%;"><?= strtoupper($this->erp->convert_number_to_words($this->erp->formatDecimal($total)));?></span></td>
+									<td colspan="6" style="width:5%;vertical-align:middle;"><span style="padding-left:20%;"><?= strtoupper($this->erp->convertNumber($this->erp->formatDecimal($total)));?></span></td>
 								</tr>
 							</tbody>
 						</table> 
