@@ -13192,6 +13192,7 @@ class Sales extends MY_Controller
         $this->data['customer'] = $this->site->getCompanyByID($gift_card->customer_id);
         $this->load->view($this->theme . 'sales/view_gift_card', $this->data);
     }
+	
 	public function invoiceTaxTwin($id = null)
     {
         $this->erp->checkPermissions('index');
@@ -13208,6 +13209,7 @@ class Sales extends MY_Controller
 		$this->data['sid'] = $id;
         $this->load->view($this->theme .'sales/invoice_twin',$this->data);
     }
+	
 	public function print_invoice_twin($id = null)
     {
         $this->erp->checkPermissions('index');
