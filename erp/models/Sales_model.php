@@ -6908,4 +6908,5 @@ public function getRielCurrency(){
 		}
 		return false;
 	}
+
 }
