@@ -83,6 +83,9 @@
 					display : none;
 				}
 			}
+            table,tbody,tr,td{
+                height: 30px !important;
+            }
 		</style>
 		<?php 
 			function cutString($str){
@@ -106,7 +109,7 @@
 					</div>
 					<div style="margin-top:-100px;float:left;">
 						<img src="<?= base_url() . 'assets/uploads/logos/' . $biller->logo; ?>"
-                         alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>">
+                         alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>" style="width: 250px;height: 80px;">
 					</div>
 					<div></div>
 					<div class="text-center" style="line-height:10px;font-size:15px;margin-top:15px;">
@@ -115,7 +118,7 @@
 					</div>
 					
 					<div class="row">
-						<table style="width: 100%;" style="font-family:Times New Roman;">				
+						<table style="width: 100%;" style="font-family:Times New Roman;">
 							<tbody>
 								<tr>
 									<td colspan="2" style="width:35%;vertical-align:middle;font-size:12px;padding-left:2px;"></td>

@@ -45,6 +45,9 @@
 					display : none;
 				}
 			}
+            table , tbody, tr,td{
+                height: 30px !important;
+            }
 		</style>
 		<title>Reibursement</title>
 	</head>
