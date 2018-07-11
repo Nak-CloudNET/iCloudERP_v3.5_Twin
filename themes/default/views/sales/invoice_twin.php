@@ -83,6 +83,9 @@
 					display : none;
 				}
 			}
+            table,tbody,tr,td{
+                height: 30px !important;
+            }
 		</style>
 		<?php 
 			function cutString($str){
@@ -106,7 +109,7 @@
 					</div>
 					<div style="margin-top:-100px;float:left;">
 						<img src="<?= base_url() . 'assets/uploads/logos/' . $biller->logo; ?>"
-                         alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>">
+                         alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>" style="width: 250px;height: 80px;">
 					</div>
 					<div></div>
 					<div class="text-center" style="line-height:10px;font-size:15px;margin-top:15px;">
@@ -115,7 +118,7 @@
 					</div>
 					
 					<div class="row">
-						<table style="width: 100%;" style="font-family:Times New Roman;">				
+						<table style="width: 100%;" style="font-family:Times New Roman;">
 							<tbody>
 								<tr>
 									<td colspan="2" style="width:35%;vertical-align:middle;font-size:12px;padding-left:2px;"></td>
@@ -134,7 +137,7 @@
 									<td colspan="2" style="width:50%;font-size:14px;vertical-align:middle;padding-left:2px;"><b><?= $customer->company ? $customer->company : $customer->name; ?></b></td>
 								</tr>
 								<tr class="header_border">
-									<td colspan="3" style="width:35%;vertical-align:middle;font-size:10px;padding-left:2px;"><?= $customer->address_kh; ?></td>
+									<td colspan="3" style="width:35%;vertical-align:middle;font-size:10px;padding-left:2px;">អាសយដ្ឋាន : <?= $customer->address_kh; ?></td>
 								</tr>
 								<tr class="header_border">
 									<td colspan="3" style="width:35%;vertical-align:middle;font-size:10px;padding-left:2px;">Address : <?= $customer->address ?></td>
@@ -276,7 +279,7 @@
 								</tr>
 								<tr style="font-size:12px;font-weight:bold;font-family:Times New Roman !important;height:23px !important;">
 									<td colspan="2" style="background-color:#e2e0e0 !important;">IN WORD(USD): </td>
-									<td colspan="6" style="width:5%;vertical-align:middle;"><span style="padding-left:20%;"><?= strtoupper($this->erp->convert_number_to_words($this->erp->formatMoney($total)));?></span></td>
+									<td colspan="6" style="width:5%;vertical-align:middle;"><span style="padding-left:20%;"><?= strtoupper($this->erp->convertNumber($this->erp->formatDecimal($total)));?></span></td>
 								</tr>
 							</tbody>
 						</table> 
