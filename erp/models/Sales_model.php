@@ -26,9 +26,9 @@ class Sales_model extends CI_Model
 				if($digital != ""){
 					$this->db->where("products.type <> 'digital' ");
 				}
-				if($service != ""){
+				/*if($service != ""){
 					$this->db->where("products.type <> 'service' ");
-				}
+				}*/
                 if ($category_id != "") {
                     $this->db->where("products.category_id", $category_id);
                 }
@@ -51,9 +51,9 @@ class Sales_model extends CI_Model
                 if ($category_id != "") {
                     $this->db->where("products.category_id", $category_id);
                 }
-				if($service != ""){
+				/*if($service != ""){
 					$this->db->where("products.type <> 'service' ");
-				}
+				}*/
                 if ($user_category != "") {
                     $this->db->where("products.category_id NOT IN (" . $user_category . ") ");
 				}
@@ -74,9 +74,9 @@ class Sales_model extends CI_Model
 				if($digital != ""){
 					$this->db->where("products.type <> 'digital' ");
 				}
-				if($service != ""){
+				/*if($service != ""){
 					$this->db->where("products.type <> 'service' ");
-				}
+				}*/
                 if ($category_id != "") {
                     $this->db->where("products.category_id", $category_id);
                 }
@@ -93,9 +93,9 @@ class Sales_model extends CI_Model
 				if($digital != ""){
 					$this->db->where("products.type <> 'digital' ");
 				}
-				if($service != ""){
+				/*if($service != ""){
 					$this->db->where("products.type <> 'service' ");
-                }
+                }*/
                 if ($category_id != "") {
                     $this->db->where("products.category_id", $category_id);
                 }
