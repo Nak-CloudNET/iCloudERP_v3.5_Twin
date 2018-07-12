@@ -246,7 +246,7 @@
                 <div class="clearfix"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-condensed table-striped">
+                    <table class="table table-bordered table-condensed">
 						<thead>
 							<tr class="info-head">
 								<th style="min-width:30px; width: 30px; text-align: center;">
@@ -471,11 +471,11 @@
 									if($sales_by_gls->num_rows() > 0){
 											$e_total = 0;
 											$i_gross_margin = "";
-										
-										$html .="<tr style='font-weight:bold;'>
+
+                                        $html .= "<tr style='font-weight:bold; background-color: #fff3b0'>
 													<td></td>
 													<td></td>
-													<td colspan='9'>" . lang("OVERHEAD") . "</td>
+													<td colspan='10' style='font-size: 16px'>" . lang("OVERHEAD") . "</td>
 													<td class='text-right'></td>
 													<td></td>
 												 </tr>";
@@ -485,10 +485,21 @@
 											$e_amount = $this->erp->formatMoney($sales_by_gl->amount);
 											$d_gross_margin = ($total_gross_margin - $sale->order_discount + $sale->shipping) + (-1)* $e_total;
 											$e_sub_total = "(".$this->erp->formatMoney(abs($e_total)).")";
-											
-											
-											
-											$html .="<tr>
+
+
+                                            $html .= "<tr style='background-color: #fff6c4 !important;'>
+														<th></th>
+														<th></th>
+														<th>Expense Date</th>
+														<th>Expense Reference</th>
+														<th colspan='2'>Description</th>
+														<th colspan='5'>Type</th>
+														<th></th>
+														<th></th>
+														<th></th>
+													 </tr>";
+
+                                            $html .= "<tr style='background-color: #fff9d7'>
 														<td></td>
 														<td></td>
 														<td>{$this->erp->hrld($sales_by_gl->tran_date)}</td>
@@ -501,20 +512,20 @@
 													 </tr>";
 										}
 											$total_overh += $e_total;
-											
-											$html .="<tr>
+
+                                        $html .= "<tr style='background-color: #fffceb'>
 														<td class='right' colspan='11'><strong>" . lang("subtotal") . " : </strong></td>
 														<td class='text-right'><strong>{$this->erp->formatMoney($e_total)}</strong></td>
 														<td></td>
 														<td class='text-right'><strong>{$e_sub_total}</strong></td>
 													</tr>";
-													
-											$html .="<tr>
-														<td class='right' colspan='11'><strong>" . lang("total_gross_margin") . " : </strong></td>
-														<td></td>
-														<td class='text-right'></td>
-														<td class='text-right'><strong>{$this->erp->formatMoney($d_gross_margin)}</strong></td>
-													</tr>";
+
+                                        /*$html .="<tr>
+                                                    <td class='right' colspan='11'><strong>" . lang("total_gross_margin") . " : </strong></td>
+                                                    <td></td>
+                                                    <td class='text-right'></td>
+                                                    <td class='text-right'><strong>{$this->erp->formatMoney($d_gross_margin)}</strong></td>
+                                                </tr>";*/
 								}
 									
 									}else{									

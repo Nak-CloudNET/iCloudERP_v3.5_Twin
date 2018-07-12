@@ -1693,7 +1693,14 @@
 															<a href="<?= site_url('reports/customers') ?>">
 																<i class="fa fa-users"></i><span class="text"> <?= lang('customers_report'); ?></span>
 															</a>
-														</li><li id="reports_users">
+                                                        </li>
+                                                        <li id="reports_customers_statement">
+                                                            <a href="<?= site_url('reports/customers_statement') ?>">
+                                                                <i class="fa fa-users"></i><span
+                                                                        class="text"> <?= lang('customers_statement_report'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                        <li id="reports_users">
 															<a href="<?= site_url('reports/users') ?>">
 																<i class="fa fa-users"></i><span class="text"> <?= lang('staff_report'); ?></span>
 															</a>

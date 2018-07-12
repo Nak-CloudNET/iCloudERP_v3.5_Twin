@@ -6909,4 +6909,45 @@ public function getRielCurrency(){
 		return false;
 	}
 
+    public function getCustomerStatements($id = null)
+    {
+        $this->db->select("
+			sales.id,
+			sales.date as date,
+			sales.due_date as due_date,
+			sales.reference_no as reference_no,
+			sales.biller,
+			companies.name as customer, 
+			users.username AS saleman,
+			sales.sale_status,
+			sales.product_tax,
+			sales.total_tax,
+			sales.ctnr_no as container,
+			sales.hbl_hawb as bill_no,
+			sales.inv_no as invoice,
+			sales.qty_vol as qty,
+			sales.g_w as kgs,
+			sales.sale_status as status,
+			COALESCE(erp_sales.grand_total,0) as amount,
+			COALESCE((SELECT SUM(erp_return_sales.grand_total) FROM erp_return_sales WHERE erp_return_sales.sale_id = erp_sales.id), 0) as return_sale,
+			COALESCE( (SELECT SUM(IF((erp_payments.paid_by != 'deposit' AND ISNULL(erp_payments.return_id)), erp_payments.amount, IF(NOT ISNULL(erp_payments.return_id), ((-1)*erp_payments.amount), 0))) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id),0) as paid, 
+			(SELECT SUM(IF(erp_payments.paid_by = 'deposit', erp_payments.amount, 0)) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id  ) as deposit,
+			SUM(COALESCE(erp_payments.discount,0)) as discount, 
+			(COALESCE(erp_sales.grand_total,0)- COALESCE((SELECT SUM(erp_return_sales.grand_total) FROM erp_return_sales WHERE erp_return_sales.sale_id = erp_sales.id), 0)-COALESCE((SELECT SUM(IF((erp_payments.paid_by != 'deposit' AND ISNULL(erp_payments.return_id)), erp_payments.amount, IF(NOT ISNULL(erp_payments.return_id), ((-1)*erp_payments.amount), 0))) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id),0)- COALESCE((SELECT SUM(IF(erp_payments.paid_by = 'deposit', erp_payments.amount, 0)) FROM erp_payments WHERE erp_payments.sale_id = erp_sales.id  ),0)-SUM(COALESCE(erp_payments.discount,0)) ) as balance, 
+			sales.payment_status,sales.join_lease_id")
+            ->join('users', 'users.id = sales.saleman_by', 'left')
+            ->join('sale_order', 'sale_order.id = sales.so_id', 'left')
+            ->join('payments', 'payments.sale_id = sales.id', 'left')
+            ->join('group_areas', 'group_areas.areas_g_code = sales.group_areas_id', 'left')
+            ->join('quotes', 'quotes.id = sales.quote_id', 'left')
+            ->join('companies', 'companies.id = sales.customer_id', 'left');
+
+        $q = $this->db->get_where('sales', array('sales.id' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
 }

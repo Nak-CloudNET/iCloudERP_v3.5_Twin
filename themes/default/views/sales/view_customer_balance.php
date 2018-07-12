@@ -314,18 +314,8 @@
 								</a>
 							</li>
 							<li>
-								<a href="#" id="excel" data-action="statement_with_logo">
-									<i class="fa fa-file-excel-o"></i> <?=lang('statement_with_logo')?>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="excel" data-action="statement_without_logo">
-									<i class="fa fa-file-excel-o"></i> <?=lang('statement_without_logo')?>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="excel" data-action="PNP_statement">
-									<i class="fa fa-file-excel-o"></i> <?=lang('PNP_statement')?>
+                                <a href="#" id="excel" data-action="customer_statement">
+                                    <i class="fa fa-file-excel-o"></i> <?= lang('customer_statement') ?>
 								</a>
 							</li>
 							

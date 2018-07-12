@@ -1602,75 +1602,199 @@ class Sales extends MY_Controller
 
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
-                
-                if ($this->input->post('form_action') == 'statement_without_logo'){
-                    
+
+                // Customer Statement Report Export
+                if ($this->input->post('form_action') == 'customer_statement') {
+
+                    $customer = $this->site->getCustomerNameByID($user_id);
+
                     $this->load->library('excel');
                     $this->excel->setActiveSheetIndex(0);
-                    $this->excel->getActiveSheet()->setTitle(lang('statement_without_logo'));
-                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
-                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
-                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('shop'));
-                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('description'));
-                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('grand_total'));
-                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('paid'));
-                    $this->excel->getActiveSheet()->SetCellValue('G1', lang('balance'));
-                    
-                    $row        = 2;
-                    $paid       = 0;
-                    $total      = 0;
-                    $balance    = 0;
+                    $this->excel->getActiveSheet()->setTitle(lang('customer_statement'));
+
+                    $this->excel->getActiveSheet()->mergeCells('A1:N1');
+                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('Twin Logistics (Cambodia) Co,.LTD'));
+                    $this->excel->getActiveSheet()->mergeCells('A2:N2');
+                    $this->excel->getActiveSheet()->SetCellValue('A2', $customer->name);
+
+                    $this->excel->getActiveSheet()->SetCellValue('A3', lang('no'));
+                    $this->excel->getActiveSheet()->SetCellValue('B3', lang('factory_name'));
+                    $this->excel->getActiveSheet()->SetCellValue('C3', lang('reimbursement'));
+                    $this->excel->getActiveSheet()->SetCellValue('D3', lang('tax_invoice'));
+                    $this->excel->getActiveSheet()->SetCellValue('E3', lang('date'));
+                    $this->excel->getActiveSheet()->SetCellValue('F3', lang('reimbursement'));
+                    $this->excel->getActiveSheet()->SetCellValue('G3', lang('tax_invoice'));
+                    $this->excel->getActiveSheet()->SetCellValue('H3', lang('amount'));
+                    $this->excel->getActiveSheet()->SetCellValue('I3', lang('container'));
+                    $this->excel->getActiveSheet()->SetCellValue('J3', lang('bill_no'));
+                    $this->excel->getActiveSheet()->SetCellValue('K3', lang('invoice'));
+                    $this->excel->getActiveSheet()->SetCellValue('L3', lang('qty'));
+                    $this->excel->getActiveSheet()->SetCellValue('M3', lang('kgs'));
+                    $this->excel->getActiveSheet()->SetCellValue('N3', lang('status'));
+
+                    $this->excel->getActiveSheet()->getRowDimension(1)->setRowHeight(25);
+                    $this->excel->getActiveSheet()->getRowDimension(2)->setRowHeight(25);
+                    $this->excel->getActiveSheet()->getRowDimension(3)->setRowHeight(30);
+                    $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setName('Ubuntu')->setSize(12);
+                    $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setName('Ubuntu')->setSize(12);
+                    $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A3:N3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A3:N3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+                    $styleArray = array(
+                        'font' => array(
+                            'bold' => true,
+                            'color' => array('rgb' => 'FFFFFF'),
+                            'size' => 10,
+                            'name' => 'Ubuntu'
+                        ),
+                        'fill' => array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '428bca')
+                        )
+                    );
+                    $this->excel->getActiveSheet()->getStyle('A3:N3')->applyFromArray($styleArray);
+
+                    $row = 4;
+                    $i = 1;
+
+                    $total_reimbursement = 0;
+                    $total_tax_inv = 0;
+                    $total_amount = 0;
                     foreach ($_POST['val'] as $id) {
-                        $account = $this->site->getReceivableByID($id);
-                        $account_items = $this->site->getReceivable_DescriptionByID($id);
-                        
-                        $description = "";
-                        $i = 0;
-                        foreach($account_items as $account_item){
-                            $i+=1; 
-                            $description = $description . $account_item->product_name . "\n". "(" . $account_item->product_noted .")". "\n";
-                        }
-                        
-                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $account->date);
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $account->reference_no);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $account->biller);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $description);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $account->grand_total);
-                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $account->paid);
-                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $account->balance);
 
-                        $total += $account->grand_total;
-                        $total += $account->paid;
-                        $balance += ($account->grand_total - $account->paid);
+                        $statement = $this->sales_model->getCustomerStatements($id);
 
+                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $i);
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $statement->customer);
+                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $statement->total_tax > 0 ? '' : $statement->reference_no);
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $statement->total_tax > 0 ? $statement->reference_no : '');
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $statement->date);
+                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $statement->total_tax > 0 ? '' : $this->erp->formatMoney($statement->balance));
+                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $statement->total_tax > 0 ? $this->erp->formatMoney($statement->balance) : '');
+                        $this->excel->getActiveSheet()->SetCellValue('H' . $row, '');
+                        $this->excel->getActiveSheet()->SetCellValue('I' . $row, $statement->container);
+                        $this->excel->getActiveSheet()->SetCellValue('J' . $row, $statement->bill_no);
+                        $this->excel->getActiveSheet()->SetCellValue('K' . $row, $statement->invoice);
+                        $this->excel->getActiveSheet()->SetCellValue('L' . $row, $statement->qty);
+                        $this->excel->getActiveSheet()->SetCellValue('M' . $row, $statement->kgs);
+                        $this->excel->getActiveSheet()->SetCellValue('N' . $row, $statement->status);
+
+                        $total_reimbursement += $statement->total_tax > 0 ? '' : $statement->balance;
+                        $total_tax_inv += $statement->total_tax > 0 ? $statement->balance : '';
+                        $total_amount += 0;
+
+                        $this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(25);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':N' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('A' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $this->excel->getActiveSheet()->getStyle('F' . $row . ':H' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $this->excel->getActiveSheet()->getStyle('I' . $row . ':N' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+                        $i++;
                         $row++;
                     }
-                    $this->excel->getActiveSheet()->getStyle('D2')->getAlignment()->setWrapText(true);
-                    $this->excel->getActiveSheet()->getStyle("E" . $row . ":G" . $row)->getBorders()
-                        ->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $this->erp->formatMoney($total));
-                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $this->erp->formatMoney($paid));
-                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $this->erp->formatMoney($balance));
-                    $this->excel->getActiveSheet()->getStyle('D'. $row.':F'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+                    $this->excel->getActiveSheet()->mergeCells('A' . $row . ':E' . $row);
+                    $this->excel->getActiveSheet()->mergeCells('I' . $row . ':N' . $row);
+                    $this->excel->getActiveSheet()->setCellValue('A' . $row, lang('total_amount'));
+                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, 'USD     ' . $this->erp->formatMoney($total_reimbursement));
+                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, 'USD     ' . $this->erp->formatMoney($total_tax_inv));
+                    $this->excel->getActiveSheet()->SetCellValue('H' . $row, 'USD     ' . $this->erp->formatMoney($total_amount));
+
+                    $this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(25);
+                    $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('A' . $row . ':H' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                    $styleArray = array(
+                        'font' => array(
+                            'bold' => true,
+                            'color' => array('rgb' => 'FFFFFF'),
+                            'size' => 10,
+                            'name' => 'Ubuntu'
+                        ),
+                        'fill' => array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '428bca')
+                        )
+                    );
+                    $this->excel->getActiveSheet()->getStyle('A' . $row . ':N' . $row)->applyFromArray($styleArray);
+
+                    $row++;
+                    $footer_row = $row + 1;
+                    $this->excel->getActiveSheet()->mergeCells('C' . $footer_row . ':D' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('C' . $footer_row, lang('Best Regards'));
+                    $this->excel->getActiveSheet()->mergeCells('I' . $footer_row . ':K' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('I' . $footer_row, lang('Acknowledge Receipt'));
+
+                    $this->excel->getActiveSheet()->getRowDimension($footer_row)->setRowHeight(20);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $footer_row++;
+
+                    $this->excel->getActiveSheet()->mergeCells('C' . $footer_row . ':D' . $footer_row);
+                    $this->excel->getActiveSheet()->mergeCells('I' . $footer_row . ':K' . $footer_row);
+
+                    $this->excel->getActiveSheet()->getRowDimension($footer_row)->setRowHeight(80);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':D' . $footer_row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('I' . $footer_row . ':K' . $footer_row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $footer_row++;
+
+                    $this->excel->getActiveSheet()->mergeCells('C' . $footer_row . ':D' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('C' . $footer_row, lang('Accounting Dept'));
+                    $this->excel->getActiveSheet()->mergeCells('I' . $footer_row . ':K' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('I' . $footer_row, lang('Account Department'));
+
+                    $this->excel->getActiveSheet()->getRowDimension($footer_row)->setRowHeight(20);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $footer_row++;
+
+                    $this->excel->getActiveSheet()->mergeCells('C' . $footer_row . ':D' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('C' . $footer_row, '');
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':D' . $footer_row)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border:: BORDER_THIN);
+
+                    $this->excel->getActiveSheet()->mergeCells('I' . $footer_row . ':K' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('I' . $footer_row, '');
+                    $this->excel->getActiveSheet()->getStyle('I' . $footer_row . ':K' . $footer_row)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border:: BORDER_THIN);
+                    $footer_row++;
+
+                    $this->excel->getActiveSheet()->mergeCells('C' . $footer_row . ':D' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('C' . $footer_row, lang('Twin Logistics (Cambodia) Co,.LTD'));
+                    $this->excel->getActiveSheet()->mergeCells('I' . $footer_row . ':K' . $footer_row);
+                    $this->excel->getActiveSheet()->setCellValue('I' . $footer_row, $customer->name);
+
+                    $this->excel->getActiveSheet()->getRowDimension($footer_row)->setRowHeight(20);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->excel->getActiveSheet()->getStyle('C' . $footer_row . ':I' . $footer_row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(40);
+                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+                    $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
                     $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
-                    
+                    $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+                    $this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+
                     $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
                     $filename = 'statement_without_logo' . date('Y_m_d_H_i_s');
 
                     if ($this->input->post('form_action') == 'export_pdf') {
-                        $styleArray = array('borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)));
-                        $this->excel->getDefaultStyle()->applyFromArray($styleArray);
+
                         $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
                         require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
                         $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
                         $rendererLibrary = 'MPDF';
                         $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
+
                         if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
                             die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
                                 PHP_EOL . ' as appropriate for your directory structure');
@@ -1679,466 +1803,12 @@ class Sales extends MY_Controller
                         header('Content-Type: application/pdf');
                         header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
                         header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-                        $this->excel->getActiveSheet()->getStyle("F" . $row . ":H" . $row)->getBorders()
-                        ->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle("F" . $row)->getBorders()
-                        ->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle("G" . $row)->getBorders()
-                        ->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A2:I2')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A2:I2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
                         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
                         return $objWriter->save('php://output');
                     }
 
-                    if ($this->input->post('form_action') == 'statement_without_logo') {
-                        header('Content-Type: application/vnd.ms-excel');
-                        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-                        header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-                        
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-                        return $objWriter->save('php://output');
-                    }
-
-                    redirect($_SERVER["HTTP_REFERER"]);
-                
-                }
-                
-                if ($this->input->post('form_action') == 'statement_with_logo'){
-                    
-                    $this->load->library('excel');
-                    $this->excel->setActiveSheetIndex(0);
-                    $this->excel->getActiveSheet()->setTitle(lang('statement_with_logo'));
-                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
-                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
-                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('shop'));
-                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('description'));
-                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('grand_total'));
-                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('paid'));
-                    $this->excel->getActiveSheet()->SetCellValue('G1', lang('balance'));
-                    
-                    $row = 2;
-                    
-                    foreach ($_POST['val'] as $id) {
-                        $account = $this->site->getReceivableByID($id);
-                        $account_items = $this->site->getReceivable_DescriptionByID($id);
-                        
-                        $description = "";
-                        $i = 0;
-                        foreach($account_items as $account_item){
-                            $i+=1; 
-                            $description = $description . $account_item->product_name . "\n". "(" . $account_item->product_noted .")". "\n";
-                        }
-                        
-                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $account->date);
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $account->reference_no);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $account->biller);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $description);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $account->grand_total);
-                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $account->paid);
-                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $account->balance);
-
-                        $total += $account->grand_total;
-                        $paid += $account->paid;
-                        $balance += ($account->grand_total - $account->paid);
-
-                        $row++;
-                    }
-                    $this->excel->getActiveSheet()->getStyle('D2')->getAlignment()->setWrapText(true);
-                    $this->excel->getActiveSheet()->getStyle("E" . $row . ":G" . $row)->getBorders()
-                        ->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $this->erp->formatMoney($total));
-                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $this->erp->formatMoney($paid));
-                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $this->erp->formatMoney($balance));
-                    $this->excel->getActiveSheet()->getStyle('D'. $row.':F'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
-                    
-                    $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $filename = 'statement_with_logo' . date('Y_m_d_H_i_s');
-                    if ($this->input->post('form_action') == 'export_pdf') {
-                        $styleArray = array('borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)));
-                        $this->excel->getDefaultStyle()->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
-                        require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
-                        $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
-                        $rendererLibrary = 'MPDF';
-                        $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
-                        if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
-                            die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
-                                PHP_EOL . ' as appropriate for your directory structure');
-                        }
-
-                        header('Content-Type: application/pdf');
-                        header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
-                        header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-                        $this->excel->getActiveSheet()->getStyle("F" . $row . ":H" . $row)->getBorders()
-                        ->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle("F" . $row)->getBorders()
-                        ->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle("G" . $row)->getBorders()
-                        ->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-                        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
-                        return $objWriter->save('php://output');
-                    }
-                    if ($this->input->post('form_action') == 'statement_with_logo') {
-                        header('Content-Type: application/vnd.ms-excel');
-                        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-                        header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-                        
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-                        return $objWriter->save('php://output');
-                    }
-
-                    redirect($_SERVER["HTTP_REFERER"]);
-                
-                }
-				if ($this->input->post('form_action') == 'PNP_statement' || $this->input->post('form_action') == 'export_pdf') {
-                    $this->load->library('excel');
-                    $this->excel->setActiveSheetIndex(0);
-					
-					$customer  	= $this->site->getCompanyNameByCustomerID($user_id);
-					$biller_id 	= $this->site->get_setting()->default_biller;
-					$billers   	= $this->site->getCompanyByID($biller_id);
-					$user_id	= $this->site->getUser($id);					
-				
-				
-                    
-					//$this->erp->print_arrays($biller);
-                    //$this->excel->getActiveSheet()->mergeCells('A1:A6');
-					$this->excel->getActiveSheet()->mergeCells('A1:D1');
-                    $this->excel->getActiveSheet()->mergeCells('A2:D2');
-					$this->excel->getActiveSheet()->mergeCells('B3:D3');
-					$this->excel->getActiveSheet()->mergeCells('A4:B4');
-					$this->excel->getActiveSheet()->mergeCells('A5:C5');
-					$this->excel->getActiveSheet()->mergeCells('B7:C7');
-                    $this->excel->getActiveSheet()->setCellValue('A1','PNP ASIA Cooperation Co.,Ltd.');
-                    $this->excel->getActiveSheet()->setCellValue('E1','STATEMENT');
-					$this->excel->getActiveSheet()->setCellValue('A2',$billers->address);
-					$this->excel->getActiveSheet()->setCellValue('A3','Tel / Fax : ');
-					$this->excel->getActiveSheet()->setCellValue('B3',$billers->phone);
-					$this->excel->getActiveSheet()->setCellValue('A4','SOLD TO:');
-					$this->excel->getActiveSheet()->setCellValue('A5',$customer->company);
-					$this->excel->getActiveSheet()->setCellValue('A7','Contact :');
-					$this->excel->getActiveSheet()->setCellValue('B7',$customer->phone);
-					$this->excel->getActiveSheet()->setCellValue('D4','INVOICE NUMBER  :');
-					$this->excel->getActiveSheet()->setCellValue('D5','INVOICE DATE   :');
-					$this->excel->getActiveSheet()->setCellValue('E5',date($format = "d/m/Y"));
-					$this->excel->getActiveSheet()->setCellValue('D6','OUR ORDER NO :');
-					$this->excel->getActiveSheet()->setCellValue('D7','TERMS  :');
-					$this->excel->getActiveSheet()->setCellValue('D8','SALES REP :');
-					$this->excel->getActiveSheet()->setCellValue('E8',$user_id->username);
-					
-                    $this->excel->getActiveSheet()->SetCellValue('A9', lang('No'));
-                    $this->excel->getActiveSheet()->SetCellValue('B9', lang('date'));
-                    $this->excel->getActiveSheet()->SetCellValue('C9', lang('Invoice_number'));
-                    $this->excel->getActiveSheet()->SetCellValue('D9', lang('Amount'));
-                    $this->excel->getActiveSheet()->SetCellValue('E9', lang('Remark'));
-					
-                    
-				
-                    $this->excel->getActiveSheet()->getRowDimension(3)->setRowHeight(30);
-					$this->excel->getActiveSheet()->getRowDimension(4)->setRowHeight(25);
-					$this->excel->getActiveSheet()->getRowDimension(5)->setRowHeight(25);
-					$this->excel->getActiveSheet()->getRowDimension(9)->setRowHeight(40);
-					
-					$this->excel->getActiveSheet()->getStyle('A9:E9')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A9:E9')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A1')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(22);
-					$this->excel->getActiveSheet()->getStyle('E1')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(15);
-                    
-					$this->excel->getActiveSheet()->getStyle('A3')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(12);
-                    $this->excel->getActiveSheet()->getStyle('A5')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(15);
-                    $this->excel->getActiveSheet()->getStyle('H2')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(14);
-                    $this->excel->getActiveSheet()->getRowDimension(2)->setRowHeight(30);
-					
-                    $this->excel->getActiveSheet()->getStyle('A1:D1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A9:E9')->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(16);
-
-                    $styleArrays = array(
-                        'font'  => array(
-                            'bold'  => true,
-                            'color' => array('rgb' => 'FFFFFF'),
-                            'size'  => 10,
-                            'name'  => 'Verdana'
-                        ),
-                        'fill' => array(
-                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                            'color' => array('rgb' => '428BCA')
-                        )
-                    );
-                    $this->excel->getActiveSheet()->getStyle('A9:E9')->applyFromArray($styleArrays);
-                    
-                    $row = 10;
-					$i=1;
-                    foreach ($_POST['val'] as $id) {
-						//$this->erp->print_arrays($_POST['val']);
-                        $row_data = $this->sales_model->getExportCustomerBalance($id);
-						$tax="";
-						if($row_data->product_tax>0){
-							$tax="VAT";
-						}else{
-							$tax="NO_VAT";
-						}
-                        $this->excel->getActiveSheet()->SetCellValue('A' . $row,$i);
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $this->erp->hrsd($row_data->date));
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $row_data->reference_no);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $row_data->balance ? '$ '.$this->erp->formatMoney($row_data->balance) : '');
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row,$tax);
-						 $total_amount += $row_data->balance;
-                        
-
-                        $this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(30);
-						$this->excel->getActiveSheet()->getStyle('A'. $row .':E' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                        $this->excel->getActiveSheet()->getStyle('A'. $row .':E' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                        $styleArray = array(
-                            'borders' => array(
-                                'allborders' => array(
-                                    'style' => PHPExcel_Style_Border::BORDER_THIN
-                                )
-                            )
-                        );
-                        $this->excel->getActiveSheet()->getStyle('A10:E10')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A' . $row . ':E' . $row)->applyFromArray($styleArray);
-                        $row++;
-						$i++;
-						
-                    }
-					$newrow=$row;
-							if($i<15){
-								$k=21 - $i;
-								for($row=$newrow;$row<=$k;$row++){
-									
-									$this->excel->getActiveSheet()->SetCellValue('A' .$row,$i);
-									$this->excel->getActiveSheet()->SetCellValue('B' . $row);
-									$this->excel->getActiveSheet()->SetCellValue('C' . $row);
-									$this->excel->getActiveSheet()->SetCellValue('D' . $row);
-									$this->excel->getActiveSheet()->SetCellValue('E' . $row);
-									$styleArray = array(
-										'borders' => array(
-											'allborders' => array(
-												'style' => PHPExcel_Style_Border::BORDER_THIN
-											)
-										)
-									);
-									$this->excel->getActiveSheet()->getStyle('A' . $row . ':E' . $row)->applyFromArray($styleArray);
-									$this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(30);
-									$this->excel->getActiveSheet()->getStyle('A'. $row .':E' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-									$this->excel->getActiveSheet()->getStyle('A'. $row .':E' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-									$i++;
-								}
-							}
-					
-					$erow=$row+1;
-					$trow=$row+2;
-					$row1=$row+6;
-					$row2=$row+10;
-					$row3=$row+11;
-					$styleArray = array(
-						'borders' => array(
-						'allborders' => array(
-						'style' => PHPExcel_Style_Border::BORDER_THIN
-						)
-						)
-					);
-					$this->excel->getActiveSheet()->mergeCells('A' . $row . ':C' . $row);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $row,'Total: ');
-                    $this->excel->getActiveSheet()->getStyle('A' . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-					$this->excel->getActiveSheet()->getStyle('A' . $row . ':E' . $row)->applyFromArray($styleArray);
-					$this->excel->getActiveSheet()->getStyle('A'. $row .':E' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(25);
-                    $this->excel->getActiveSheet()->getStyle('A' . $row)->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(16);
-					$this->excel->getActiveSheet()->SetCellValue('D' . $row, $total_amount ? '$ '.$this->erp->formatMoney($total_amount) : '');
-					
-					$this->excel->getActiveSheet()->mergeCells('A' . $erow . ':B' . $erow);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $erow,'');
-					$this->excel->getActiveSheet()->getStyle('A' . $erow . ':D' . $erow)->applyFromArray($styleArray);
-					$this->excel->getActiveSheet()->getStyle('A'. $erow .':D' . $erow)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->getRowDimension($erow)->setRowHeight(25);
-					$this->excel->getActiveSheet()->SetCellValue('D'.$erow,'');
-					
-					$this->excel->getActiveSheet()->mergeCells('A' . $trow . ':C' . $trow);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $trow,'Balance: ');
-                    $this->excel->getActiveSheet()->getStyle('A' . $trow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-					$this->excel->getActiveSheet()->getStyle('A' . $trow . ':D' . $trow)->applyFromArray($styleArray);
-					$this->excel->getActiveSheet()->getStyle('A'. $trow .':D' . $trow)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->getRowDimension($trow)->setRowHeight(25);
-                    $this->excel->getActiveSheet()->getStyle('A' . $trow)->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(16);
-					$this->excel->getActiveSheet()->getStyle('D'. $trow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-					$this->excel->getActiveSheet()->SetCellValue('D' . $trow, $total_amount ? '$ '.$this->erp->formatMoney($total_amount) : '');
-					
-					$this->excel->getActiveSheet()->getStyle('A' . $row1 . ':C' . $row1)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->mergeCells('A' . $row1 . ':C' . $row1);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $row1,'PNP ASIA Cooperation Co.,Ltd.');
-					
-					$this->excel->getActiveSheet()->getStyle('E'. $row1)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-					$this->excel->getActiveSheet()->getStyle('E' . $row1 . ':C' . $row1)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->setCellValue('E' . $row1,'Checked & Received by');
-					
-					$this->excel->getActiveSheet()->getStyle('A' . $row2 . ':B' . $row2)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->mergeCells('A' . $row2 . ':B' . $row2);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $row2,'MR. PITIPORN FAKSAWAT');
-					$this->excel->getActiveSheet()->getStyle('A' . $row2)->getFont()
-                                ->setName('Times New Roman')
-                                ->setSize(14);
-					
-					$this->excel->getActiveSheet()->getStyle('A' . $row3 . ':B' . $row3)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-					$this->excel->getActiveSheet()->getStyle('A' . $row3 . ':B' . $row3)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					$this->excel->getActiveSheet()->mergeCells('A' . $row3 . ':B' . $row3);
-                    $this->excel->getActiveSheet()->setCellValue('A' . $row3,'Managing Director');
-					
-					$this->excel->getActiveSheet()->getStyle('E' . $row3)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-					$this->excel->getActiveSheet()->getStyle('E' . $row3 )->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->setCellValue('E' . $row3,$customer->company);
-					
-                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
-                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
-                    $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
-                   
-                    $this->excel->getActiveSheet()->getStyle('E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('E1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A2:D2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A3:D3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A4:C4')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A5:C5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('A7:C7')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('D4:E4')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('D5:E5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('D6:E6')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('D7:E7')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->excel->getActiveSheet()->getStyle('D8:E8')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					
-                    $this->excel->getActiveSheet()->getStyle('D4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $this->excel->getActiveSheet()->getStyle('D5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $this->excel->getActiveSheet()->getStyle('D6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $this->excel->getActiveSheet()->getStyle('D7')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $this->excel->getActiveSheet()->getStyle('D8')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                   
-                    $filename = 'customer_balance_' . date('Y_m_d_H_i_s');
-
-                    if ($this->input->post('form_action') == 'export_pdf') {
-                        $styleArray = array('borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)));
-                        //$this->excel->getDefaultStyle()->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
-                        require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
-                        $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
-                        $rendererLibrary = 'MPDF';
-                        $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
-                        if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
-                            die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
-                                PHP_EOL . ' as appropriate for your directory structure');
-                        }
-
-                        header('Content-Type: application/pdf');
-                        header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
-                        header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-						
-						$header_style = array(
-							'alignment' => array(
-								'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
-							),
-							'font'  => array(
-								'bold'  => true
-							)
-						);
-						
-						$body_style = array(
-							'alignment' => array(
-								'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
-							)
-						);
-						
-						$this->excel->getActiveSheet()->getStyle('A1:E1')->applyFromArray($header_style);
-						$this->excel->getActiveSheet()->getStyle('A4:E4')->applyFromArray($header_style);
-						$this->excel->getActiveSheet()->getStyle('A9:E9')->applyFromArray($header_style);
-						$this->excel->getActiveSheet()->getStyle('A9:E9')->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-						$rw = 10;
-						foreach ($_POST['val'] as $id) {
-							$this->excel->getActiveSheet()->getStyle("A" . $rw . ":E" . $rw)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
-							
-							$rw++;
-						}	
-						
-                        $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
-						$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-						$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-						$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-						$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
-						
-
-                        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
-                        return $objWriter->save('php://output');
-                    }
-
-                    if ($this->input->post('form_action') == 'PNP_statement') {
-						$new_row = $row;
-						$footer_style = array(
-							'alignment' => array(
-								'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT
-							),
-							'font'  => array(
-								'bold'  => true
-							)
-						);
-						
-						$this->excel->getActiveSheet()->getStyle('A'.$new_row.':E'.$new_row)->applyFromArray($footer_style);
+                    if ($this->input->post('form_action') == 'customer_statement') {
 
                         $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
                         $this->excel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
@@ -2152,40 +1822,20 @@ class Sales extends MY_Controller
                         $this->excel->getActiveSheet()->getPageMargins()->setLeft(0.35);
                         $this->excel->getActiveSheet()->getPageMargins()->setBottom(0.25);
 
-                        $styleArray = array(
-                            'borders' => array(
-                                'allborders' => array(
-                                    'style' => PHPExcel_Style_Border::BORDER_THIN
-                                )
-                            )
-                        );
-                        // $this->excel->getDefaultStyle()->applyFromArray($styleArray);
-
-
                         header('Content-Type: application/vnd.ms-excel');
                         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
                         header('Cache-Control: max-age=0');
-                        $styleArray = array(
-                            'font'  => array(
-                                'bold'  => true
-                            )
-                        );
-
-                        $this->excel->getActiveSheet()->getStyle('A1:E1')->applyFromArray($styleArray);
-                        $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                       
-                        
-                        
 
                         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
                         return $objWriter->save('php://output');
                     }
 
                     redirect($_SERVER["HTTP_REFERER"]);
+
                 }
 				
             } else {
-                $this->session->set_flashdata('error', $this->lang->line("no_supplier_selected"));
+                $this->session->set_flashdata('error', $this->lang->line("no_customer_balance_selected"));
                 redirect($_SERVER["HTTP_REFERER"]);
             }
         } else {
