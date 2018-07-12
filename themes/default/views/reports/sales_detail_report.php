@@ -375,25 +375,6 @@
 						            $amount=0;	
                                     $amounts=0;
 									$total_overh = 0;
-									
-									$sales_by_gls = $this->db->query("SELECT
-																	erp_gl_trans.sale_id,
-																	erp_gl_trans.customer_id,
-																	erp_gl_trans.biller_id,
-																	erp_gl_trans.tran_date,
-																	erp_gl_trans.reference_no,
-																	erp_gl_trans.description,
-																	erp_gl_trans.amount,
-																	erp_gl_trans.narrative,
-																	erp_gl_trans.tran_type,
-																	erp_gl_trans.account_code
-																	FROM
-																		erp_gl_trans
-																	INNER JOIN erp_sales ON erp_sales.id = erp_gl_trans.sale_id																	
-																	WHERE erp_sales.id = {$sale->id}
-																	AND sectionid = 50
-																	GROUP BY reference_no
-																	");
 
 									if($sale->type == 1){
                                         foreach ($sales_detail as $sale_detail) {
@@ -465,8 +446,25 @@
                                                 <td class="right"><?= $this->erp->formatMoney($gross_margin); ?></td>
                                             <?php } ?>
 										</tr>
-								<?php 
-										
+                                            <?php
+                                            $sales_by_gls = $this->db->query("SELECT
+                                                erp_gl_trans.sale_id,
+                                                erp_gl_trans.customer_id,
+                                                erp_gl_trans.biller_id,
+                                                erp_gl_trans.tran_date,
+                                                erp_gl_trans.reference_no,
+                                                erp_gl_trans.description,
+                                                erp_gl_trans.amount,
+                                                erp_gl_trans.narrative,
+                                                erp_gl_trans.tran_type,
+                                                erp_gl_trans.account_code
+                                                FROM
+                                                    erp_gl_trans
+                                                INNER JOIN erp_sales ON erp_sales.id = erp_gl_trans.sale_id																	
+                                                WHERE erp_sales.id = {$sale->id}
+                                                AND sectionid = 50
+                                                GROUP BY reference_no
+                                                ");
 										}
 									
 									$html = "";
@@ -476,7 +474,8 @@
 										
 										$html .="<tr style='font-weight:bold;'>
 													<td></td>
-													<td colspan='10'>".lang("OVERHEAD")."</td>
+													<td></td>
+													<td colspan='9'>" . lang("OVERHEAD") . "</td>
 													<td class='text-right'></td>
 													<td></td>
 												 </tr>";
@@ -491,9 +490,11 @@
 											
 											$html .="<tr>
 														<td></td>
+														<td></td>
 														<td>{$this->erp->hrld($sales_by_gl->tran_date)}</td>
 														<td>{$sales_by_gl->reference_no}</td>
-														<td colspan='7'>{$sales_by_gl->description}</td>
+														<td colspan='2'>{$sales_by_gl->description}</td>
+														<td colspan='5'>{$sales_by_gl->narrative}</td>
 														<td class='text-right'>{$e_amount}</td>
 														<td></td>
 														<td></td>
@@ -502,14 +503,14 @@
 											$total_overh += $e_total;
 											
 											$html .="<tr>
-														<td class='right' colspan='10'>".lang("subtotal")." : </td>
+														<td class='right' colspan='11'>" . lang("subtotal") . " : </td>
 														<td class='text-right'>{$this->erp->formatMoney($e_total)}</td>
 														<td></td>
 														<td class='text-right'>{$e_sub_total}</td>
 													</tr>";
 													
 											$html .="<tr>
-														<td class='right' colspan='10'>".lang("total_gross_margin")." : </td>
+														<td class='right' colspan='11'>" . lang("total_gross_margin") . " : </td>
 														<td></td>
 														<td class='text-right'></td>
 														<td class='text-right'>{$this->erp->formatMoney($d_gross_margin)}</td>
