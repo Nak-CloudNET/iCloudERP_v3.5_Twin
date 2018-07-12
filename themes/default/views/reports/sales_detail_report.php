@@ -495,7 +495,7 @@
 														<td>{$sales_by_gl->reference_no}</td>
 														<td colspan='2'>{$sales_by_gl->description}</td>
 														<td colspan='5'>{$sales_by_gl->narrative}</td>
-														<td class='text-right'>{$e_amount}</td>
+														<td class='text-right'><strong>{$e_amount}</strong></td>
 														<td></td>
 														<td></td>
 													 </tr>";
@@ -503,17 +503,17 @@
 											$total_overh += $e_total;
 											
 											$html .="<tr>
-														<td class='right' colspan='11'>" . lang("subtotal") . " : </td>
-														<td class='text-right'>{$this->erp->formatMoney($e_total)}</td>
+														<td class='right' colspan='11'><strong>" . lang("subtotal") . " : </strong></td>
+														<td class='text-right'><strong>{$this->erp->formatMoney($e_total)}</strong></td>
 														<td></td>
-														<td class='text-right'>{$e_sub_total}</td>
+														<td class='text-right'><strong>{$e_sub_total}</strong></td>
 													</tr>";
 													
 											$html .="<tr>
-														<td class='right' colspan='11'>" . lang("total_gross_margin") . " : </td>
+														<td class='right' colspan='11'><strong>" . lang("total_gross_margin") . " : </strong></td>
 														<td></td>
 														<td class='text-right'></td>
-														<td class='text-right'>{$this->erp->formatMoney($d_gross_margin)}</td>
+														<td class='text-right'><strong>{$this->erp->formatMoney($d_gross_margin)}</strong></td>
 													</tr>";
 								}
 									
