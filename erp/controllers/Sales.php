@@ -1313,6 +1313,9 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
 
+            $current_date = explode('-', date('Y-m'));
+            $from_date = explode('-', $this->input->post('start_date'));
+
             if (!empty($_POST['val'])) {
                 if ($this->input->post('form_action') == 'delete') {
                     
@@ -1615,7 +1618,12 @@ class Sales extends MY_Controller
                     $this->excel->getActiveSheet()->mergeCells('A1:N1');
                     $this->excel->getActiveSheet()->SetCellValue('A1', lang('Twin Logistics (Cambodia) Co,.LTD'));
                     $this->excel->getActiveSheet()->mergeCells('A2:N2');
-                    $this->excel->getActiveSheet()->SetCellValue('A2', $customer->name);
+
+                    if ($this->input->post('start_date')) {
+                        $this->excel->getActiveSheet()->SetCellValue('A2', $customer->name . ' On ' . $this->erp->EnglishMonth((int)$from_date[1]) . ', ' . $from_date[0]);
+                    } else {
+                        $this->excel->getActiveSheet()->SetCellValue('A2', $customer->name . ' On ' . $this->erp->EnglishMonth((int)$current_date[1]) . ', ' . $current_date[0]);
+                    }
 
                     $this->excel->getActiveSheet()->SetCellValue('A3', lang('no'));
                     $this->excel->getActiveSheet()->SetCellValue('B3', lang('factory_name'));
@@ -1960,9 +1968,9 @@ class Sales extends MY_Controller
 				$date =  date('Y-m-d', strtotime($date1));
 				
 				$this->datatables
-				->where("date >=", $date)
-				->where('DATE_SUB(date, INTERVAL 1 DAY) <= CURDATE()')
-				->where('sales.payment_term <>', 0);
+                    //->where("erp_sales.date >=", $date)
+                    ->where('DATE_SUB(erp_sales.date, INTERVAL 1 DAY) <= CURDATE()');
+                //->where('sales.payment_term <>', 0);
 			}
         }        
         if ($this->permission['sales-index'] = ''){

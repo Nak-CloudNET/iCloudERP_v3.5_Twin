@@ -21,6 +21,9 @@
 		if(isset($date)){
 			$v .= "&d=" . $date;
 		}
+
+        $start_date = $this->erp->fld($this->input->post('start_date'));
+        $end_date = $this->erp->fld($this->input->post('end_date'));
 	}
 ?>
 
@@ -364,6 +367,8 @@
     
     <div style="display: none;">
         <input type="hidden" name="form_action" value="" id="form_action"/>
+        <input type="hidden" name="start_date" value="<?= $start_date ?>" id="start_date"/>
+        <input type="hidden" name="end_date" value="<?= $end_date ?>" id="end_date"/>
         <?=form_submit('performAction', 'performAction', 'id="action-form-submit"')?>
     </div>
     <?= form_close()?>

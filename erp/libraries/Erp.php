@@ -67,33 +67,62 @@ class Erp
     }
 	
 	function KhmerMonth($m)
-	{
-		if($m==1){
-			return "មករា";
-		}else if($m==2){
-			return "កុម្ភៈ";
-		}else if($m==3){
-			return "មិនា";
-		}else if($m==4){
-			return "មេសា";
-		}else if($m==5){
-			return "ឧសភា";
-		}else if($m==6){
-			return "មិថុនា";
-		}else if($m==7){
-			return "កក្កដា";
-		}else if($m==8){
-			return "សីហា";
-		}else if($m==9){
-			return "កញ្ញា";
-		}else if($m==10){
-			return "តុលា";
-		}else if($m==11){
-			return "វិច្ឆិកា";
-		}else if($m==12){
-			return "ធ្នូ";
-		}
-	}
+    {
+        if ($m == 1) {
+            return "មករា";
+        } else if ($m == 2) {
+            return "កុម្ភៈ";
+        } else if ($m == 3) {
+            return "មិនា";
+        } else if ($m == 4) {
+            return "មេសា";
+        } else if ($m == 5) {
+            return "ឧសភា";
+        } else if ($m == 6) {
+            return "មិថុនា";
+        } else if ($m == 7) {
+            return "កក្កដា";
+        } else if ($m == 8) {
+            return "សីហា";
+        } else if ($m == 9) {
+            return "កញ្ញា";
+        } else if ($m == 10) {
+            return "តុលា";
+        } else if ($m == 11) {
+            return "វិច្ឆិកា";
+        } else if ($m == 12) {
+            return "ធ្នូ";
+        }
+    }
+
+    function EnglishMonth($m)
+    {
+        if ($m == 1) {
+            return "January";
+        } else if ($m == 2) {
+            return "February";
+        } else if ($m == 3) {
+            return "March";
+        } else if ($m == 4) {
+            return "April";
+        } else if ($m == 5) {
+            return "May";
+        } else if ($m == 6) {
+            return "June";
+        } else if ($m == 7) {
+            return "July";
+        } else if ($m == 8) {
+            return "August";
+        } else if ($m == 9) {
+            return "September";
+        } else if ($m == 10) {
+            return "October";
+        } else if ($m == 11) {
+            return "November";
+        } else if ($m == 12) {
+            return "December";
+        }
+    }
 
 	function KhmerNumDate ($numDate)
 	{
