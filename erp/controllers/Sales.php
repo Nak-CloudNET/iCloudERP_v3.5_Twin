@@ -1683,7 +1683,7 @@ class Sales extends MY_Controller
                         $this->excel->getActiveSheet()->SetCellValue('E' . $row, $statement->date);
                         $this->excel->getActiveSheet()->SetCellValue('F' . $row, $statement->total_tax > 0 ? '' : $this->erp->formatMoney($statement->balance));
                         $this->excel->getActiveSheet()->SetCellValue('G' . $row, $statement->total_tax > 0 ? $this->erp->formatMoney($statement->balance) : '');
-                        $this->excel->getActiveSheet()->SetCellValue('H' . $row, '');
+                        $this->excel->getActiveSheet()->SetCellValue('H' . $row, $this->erp->formatMoney($statement->total_tax ? $statement->balance : $statement->balance));
                         $this->excel->getActiveSheet()->SetCellValue('I' . $row, $statement->container);
                         $this->excel->getActiveSheet()->SetCellValue('J' . $row, $statement->bill_no);
                         $this->excel->getActiveSheet()->SetCellValue('K' . $row, $statement->invoice);
@@ -1693,7 +1693,7 @@ class Sales extends MY_Controller
 
                         $total_reimbursement += $statement->total_tax > 0 ? '' : $statement->balance;
                         $total_tax_inv += $statement->total_tax > 0 ? $statement->balance : '';
-                        $total_amount += 0;
+                        $total_amount += $statement->total_tax ? $statement->balance : $statement->balance;
 
                         $this->excel->getActiveSheet()->getRowDimension($row)->setRowHeight(25);
                         $this->excel->getActiveSheet()->getStyle('A' . $row . ':N' . $row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
